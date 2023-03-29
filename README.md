@@ -6,6 +6,6 @@ javaCC - [pdf ensinando](https://www.cin.ufpe.br/~in1007/transparencias/Material
 javacc arquivo.jj
 ```
 
-links:
-[framework do javaCC](https://www.cambridge.org/resources/052182060X/)
-[javaCC](https://javacc.github.io/javacc/)
+links:<br>
+[framework do javaCC](https://www.cambridge.org/resources/052182060X/)<br>
+[javaCC](https://javacc.github.io/javacc/)<br>
