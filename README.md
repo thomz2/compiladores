@@ -1,7 +1,7 @@
 # compiladores
 javaCC
 
-### compilar:
+#### compilar um arquivo no javaCC:
 ```
 javacc arquivo.jj
 ```
