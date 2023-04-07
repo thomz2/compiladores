@@ -1,6 +1,30 @@
 
 PARSER_BEGIN(MyParser)
-public class MyParser {}
+public class MyParser {
+    public static void main(String[] args){
+        try {
+            String input = readFile(args[0]);
+            MyParser parser = new MyParser(new StringReader(input));
+            System.out.println("Syntax is okay");
+        } catch (Throwable e) {
+            System.out.println("Syntax check failed: " + e.getMessage());
+        }
+
+    }
+
+    private static String readFile(String filePath) throws Exception {
+        File file = new File(filePath);
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String line;
+        StringBuilder stringBuilder = new StringBuilder();
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line);
+            stringBuilder.append(System.lineSeparator());
+        }
+        reader.close();
+        return stringBuilder.toString();
+    }
+}
 PARSER_END(MyParser)
 
 
