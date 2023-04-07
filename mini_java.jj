@@ -73,7 +73,7 @@ void ClassDeclaration() : {}
 
 void VarDeclaration() : {}
 {
-    LOOKAHEAD(3) Type() ID() <SEMI>
+    Type() ID() <SEMI>
 }
 
 void MethodDeclaration() : {}
@@ -81,7 +81,7 @@ void MethodDeclaration() : {}
     <PUBLIC> Type() ID() "("
         (Type() ID() ( "," Type() ID())* )?
     ")" "{"
-        (VarDeclaration())*
+        (LOOKAHEAD(2) VarDeclaration())*
         (Statement())*
         "return" Expression() <SEMI>
     "}"
