@@ -1,0 +1,227 @@
+
+PARSER_BEGIN(MyParser)
+public class MyParser {
+    public static void main(String[] args) throws ParseException, TokenMgrError{
+        try {
+            String input = readFile(args[0]);
+            MyParser parser = new MyParser(new StringReader(input));
+            List<Token> tokens = new ArrayList<Token>();
+
+            // analise lexica
+            try {
+                while (true) {
+                    Token token = parser.getNextToken();
+                    if (token.kind == 0) {
+                        break;
+                    }
+                    tokens.add(token);
+                    // exibir token atual
+                    System.out.println("Token atual: " + token.image);
+                }
+            } catch (TokenMgrError e) {
+                // informações do token quando ocorrer um erro léxico
+                System.out.println("Erro lexico: " + e.getMessage());
+                System.out.println("Tokens correspondidos:");
+                for (Token token : tokens) {
+                    System.out.println("Linha " + token.beginLine + ", Coluna " + token.beginColumn +
+                            ": Imagem: \"" + token.image + "\", Kind: " + token.kind);
+                }
+            }
+
+            // analise sintatica
+            try {
+                parser.ReInit(new StringReader(input));
+                parser.Prog();
+                System.out.println("Sintaxe ok");
+            } catch (Throwable e) {
+                System.out.println("Sintaxe falhou: " + e.getMessage());
+            }
+
+        } catch (Throwable e) {
+            System.out.println("Erro ao ler o arquivo");
+        }
+    }
+
+    private static String readFile(String filePath) throws Exception {
+        File file = new File(filePath);
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String line;
+        StringBuilder stringBuilder = new StringBuilder();
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line);
+            stringBuilder.append(System.lineSeparator());
+        }
+        reader.close();
+        return stringBuilder.toString();
+    }
+}
+PARSER_END(MyParser)
+
+
+SKIP :
+{ " "
+| "\t"
+| "\r"
+| "\n"
+| < "//" (~["\n","\r"])* ("\n" | "\r\n" | "\r") >
+| < "/*" (~[])* "*/" >
+
+}
+TOKEN :
+{ < WHILE: "while" >
+| < BEGIN: "begin" >
+| < END: "end" >
+| < DO: "do" >
+| < IF: "if" >
+| < THEN: "then" >
+| < ELSE: "else" >
+| < SEMI: ";" >
+| < ASSIGN: "=" >
+| < CLASS: "class" >
+| < PUBLIC: "public" >
+| < STATIC: "static" >
+| < VOID: "void" >
+| < MAIN: "main" >
+| < NEW: "new" >
+| < EXTENDS: "extends" >
+| < RETURN: "return" >
+| < STRING: "String" >
+| < INT: "int" >
+| < BOOLEAN: "boolean" >
+| < PRINT: "System.out.println" >
+| < LENGTH: "length" >
+| < TRUE: "true" >
+| < FALSE: "false" >
+| < THIS: "this" >
+| < OP_AND: "&&" >
+| < OP_LESS: "<" >
+| < OP_ADD: "+" >
+| < OP_SUB: "-" >
+| < OP_MULT: "*" >
+| < #LETTER : ["A"-"Z"] | ["a"-"z"] >
+| < ID: <LETTER> (<LETTER> | ["0"-"9"] | "_")* >
+| < INTEGER_LITERAL : ["0"-"9"] (["0"-"9"])* >
+}
+
+void Prog() : {}
+{
+    MainClass()
+    (ClassDeclaration())*
+    <EOF>
+}
+
+void MainClass() : {}
+{
+    <CLASS> ID() "{"
+        <PUBLIC> <STATIC> <VOID> <MAIN> "(" <STRING> "[" "]" ID() ")" "{"
+            Statement()
+        "}"
+    "}"
+}
+
+void ClassDeclaration() : {}
+{
+    <CLASS> ID() (<EXTENDS> ID())? "{"
+        (VarDeclaration())* (MethodDeclaration())*
+    "}"
+}
+
+void VarDeclaration() : {}
+{
+    Type() ID() <SEMI>
+}
+
+void MethodDeclaration() : {}
+{
+    <PUBLIC> Type() ID() "("
+        (Type() ID() ( "," Type() ID())* )?
+    ")" "{"
+        (LOOKAHEAD(2) VarDeclaration())*
+        (Statement())*
+        "return" Expression() <SEMI>
+    "}"
+}
+
+void Type() : {}
+{
+    LOOKAHEAD(2)
+      <INT>
+    | <INT> "/[" "]"
+    | <BOOLEAN>
+    | ID()
+}
+
+void Statement() : {}
+{
+    "{" (Statement())* "}"
+    | <IF> "(" Expression() ")" Statement() <ELSE> Statement()
+    | <WHILE> "(" Expression() ")" Statement()
+    | <PRINT> "(" Expression() ")" <SEMI>
+    | LOOKAHEAD(2) // coloquei de 6 para 2
+      ID() "=" Expression() <SEMI>
+    | ID() "[" Expression() "]" "=" Expression() <SEMI>
+}
+
+/*
+void Expression() : {}
+{
+    <THIS>
+    | <TRUE>
+    | <FALSE>
+    | <INTEGER_LITERAL>
+    | ID()
+    | LOOKAHEAD(2)
+      <NEW> <INT> "[" Expression() "]"
+    | <NEW> ID() "(" ")"
+    | "!" Expression()
+    | "(" Expression() ")"
+    | LOOKAHEAD(3)
+      Expression() "." <LENGTH>
+    | Expression() "[" Expression() "]"
+    | Expression() BinaryOperator() Expression()
+    | Expression() "." ID() "(" ( Expression() ( "," Expression() )* )? ")"
+}
+*/
+
+/*
+void Expression() : {}
+{
+    LOOKAHEAD(2) // lookahead aumentado em 1
+      Expr1()
+    | Expr1() Expr2()
+}
+ */
+
+void Expression() : {}
+{
+    Expr1() (LOOKAHEAD(2) Expr2())* // lookahead aumentado em 1
+}
+
+void Expr1() : {}
+{
+    <THIS>
+    | <TRUE>
+    | <FALSE>
+    | <INTEGER_LITERAL>
+    | ID()
+    | "!" Expression()
+    | "(" Expression() ")"
+    | LOOKAHEAD(2) // lookahead aumentado em 1
+      <NEW> <INT> "[" Expression() "]"
+    | <NEW> ID() "(" ")"
+}
+
+void Expr2() : {}
+{
+    BinaryOperator() Expression()
+    | LOOKAHEAD(2) // lookahead aumentado em 1
+      "." <LENGTH>
+    | "." ID() "(" ( Expression() ( "," Expression() )* )? ")"
+}
+
+void BinaryOperator() : {}
+{
+    <OP_AND> | <OP_LESS> | <OP_ADD> | <OP_SUB> | <OP_MULT>
+}
+
+void ID() : {} { <ID> }
