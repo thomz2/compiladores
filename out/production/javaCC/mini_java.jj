@@ -214,6 +214,7 @@ void Expr1() : {}
 void Expr2() : {}
 {
     BinaryOperator() Expression()
+    | "[" Expression() "]"
     | LOOKAHEAD(2) // lookahead aumentado em 1
       "." <LENGTH>
     | "." ID() "(" ( Expression() ( "," Expression() )* )? ")"

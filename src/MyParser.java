@@ -408,6 +408,11 @@ void Expression() : {}
       BinaryOperator();
       Expression();
       break;
+    case 42:
+      jj_consume_token(42);
+      Expression();
+      jj_consume_token(43);
+      break;
     default:
       jj_la1[15] = jj_gen;
       if (jj_2_6(2)) {
@@ -528,13 +533,7 @@ void Expression() : {}
     finally { jj_save(5, xla); }
   }
 
-  static private boolean jj_3R_10() {
-    if (jj_3R_12()) return true;
-    if (jj_scan_token(38)) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_16() {
+  static private boolean jj_3R_17() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(32)) {
@@ -553,7 +552,13 @@ void Expression() : {}
     return false;
   }
 
-  static private boolean jj_3R_14() {
+  static private boolean jj_3R_10() {
+    if (jj_3R_12()) return true;
+    if (jj_scan_token(38)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_15() {
     if (jj_scan_token(49)) return true;
     if (jj_scan_token(38)) return true;
     return false;
@@ -565,26 +570,35 @@ void Expression() : {}
     return false;
   }
 
+  static private boolean jj_3R_14() {
+    if (jj_scan_token(42)) return true;
+    if (jj_3R_18()) return true;
+    return false;
+  }
+
   static private boolean jj_3R_11() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_13()) {
     jj_scanpos = xsp;
+    if (jj_3R_14()) {
+    jj_scanpos = xsp;
     if (jj_3_6()) {
     jj_scanpos = xsp;
-    if (jj_3R_14()) return true;
+    if (jj_3R_15()) return true;
+    }
     }
     }
     return false;
   }
 
   static private boolean jj_3R_13() {
-    if (jj_3R_16()) return true;
     if (jj_3R_17()) return true;
+    if (jj_3R_18()) return true;
     return false;
   }
 
-  static private boolean jj_3R_21() {
+  static private boolean jj_3R_22() {
     if (jj_scan_token(NEW)) return true;
     return false;
   }
@@ -595,8 +609,13 @@ void Expression() : {}
     return false;
   }
 
-  static private boolean jj_3R_20() {
+  static private boolean jj_3R_21() {
     if (jj_scan_token(41)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_20() {
+    if (jj_scan_token(48)) return true;
     return false;
   }
 
@@ -606,17 +625,12 @@ void Expression() : {}
     return false;
   }
 
-  static private boolean jj_3R_19() {
-    if (jj_scan_token(48)) return true;
-    return false;
-  }
-
   static private boolean jj_3_4() {
     if (jj_3R_11()) return true;
     return false;
   }
 
-  static private boolean jj_3R_18() {
+  static private boolean jj_3R_19() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(31)) {
@@ -629,13 +643,13 @@ void Expression() : {}
     jj_scanpos = xsp;
     if (jj_scan_token(38)) {
     jj_scanpos = xsp;
-    if (jj_3R_19()) {
-    jj_scanpos = xsp;
     if (jj_3R_20()) {
+    jj_scanpos = xsp;
+    if (jj_3R_21()) {
     jj_scanpos = xsp;
     if (jj_3_5()) {
     jj_scanpos = xsp;
-    if (jj_3R_21()) return true;
+    if (jj_3R_22()) return true;
     }
     }
     }
@@ -647,14 +661,14 @@ void Expression() : {}
     return false;
   }
 
-  static private boolean jj_3R_15() {
+  static private boolean jj_3R_16() {
     if (jj_scan_token(INT)) return true;
     if (jj_scan_token(47)) return true;
     return false;
   }
 
-  static private boolean jj_3R_17() {
-    if (jj_3R_18()) return true;
+  static private boolean jj_3R_18() {
+    if (jj_3R_19()) return true;
     return false;
   }
 
@@ -668,7 +682,7 @@ void Expression() : {}
     xsp = jj_scanpos;
     if (jj_3_2()) {
     jj_scanpos = xsp;
-    if (jj_3R_15()) {
+    if (jj_3R_16()) {
     jj_scanpos = xsp;
     if (jj_scan_token(26)) {
     jj_scanpos = xsp;
@@ -710,7 +724,7 @@ void Expression() : {}
       jj_la1_0 = new int[] {0x10000,0x400000,0x6000000,0x20000,0x0,0x6000000,0x8000880,0x6000000,0x8000880,0x8000880,0x0,0xe0000000,0x200000,0x0,0xe0200000,0x0,0x0,0x0,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x40,0x0,0x4000,0x40,0x140,0x40,0x140,0x100,0x40,0x102c0,0x0,0x4000,0x102c0,0x1f,0x20000,0x1f,};
+      jj_la1_1 = new int[] {0x0,0x0,0x40,0x0,0x4000,0x40,0x140,0x40,0x140,0x100,0x40,0x102c0,0x0,0x4000,0x102c0,0x41f,0x20000,0x1f,};
    }
   static final private JJCalls[] jj_2_rtns = new JJCalls[6];
   static private boolean jj_rescan = false;
