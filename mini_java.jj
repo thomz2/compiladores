@@ -1,10 +1,11 @@
 
 PARSER_BEGIN(MyParser)
 public class MyParser {
-    public static void main(String[] args){
+    public static void main(String[] args) throws ParseException, TokenMgrError{
         try {
             String input = readFile(args[0]);
             MyParser parser = new MyParser(new StringReader(input));
+            parser.Prog();
             System.out.println("Syntax is okay");
         } catch (Throwable e) {
             System.out.println("Syntax check failed: " + e.getMessage());
@@ -31,6 +32,7 @@ PARSER_END(MyParser)
 SKIP :
 { " "
 | "\t"
+| "\r"
 | "\n"
 | < "//" (~["\n","\r"])* ("\n" | "\r\n" | "\r") >
 | < "/*" (~[])* "*/" >
@@ -123,11 +125,11 @@ void Type() : {}
 void Statement() : {}
 {
     "{" (Statement())* "}"
-    | <IF> "(" Expression() ")" <ELSE> Statement()
+    | <IF> "(" Expression() ")" Statement() <ELSE> Statement()
     | <WHILE> "(" Expression() ")" Statement()
-    | <PRINT> "(" Expression() ")"
-    | LOOKAHEAD(6)
-      ID() "=" Expression() ";"
+    | <PRINT> "(" Expression() ")" <SEMI>
+    | LOOKAHEAD(2) // coloquei de 6 para 2
+      ID() "=" Expression() <SEMI>
     | ID() "[" Expression() "]" "=" Expression() <SEMI>
 }
 
@@ -152,11 +154,18 @@ void Expression() : {}
 }
 */
 
+/*
 void Expression() : {}
 {
-    LOOKAHEAD(1)
+    LOOKAHEAD(2) // lookahead aumentado em 1
       Expr1()
     | Expr1() Expr2()
+}
+ */
+
+void Expression() : {}
+{
+    Expr1() (LOOKAHEAD(2) Expr2())* // lookahead aumentado em 1
 }
 
 void Expr1() : {}
@@ -168,7 +177,7 @@ void Expr1() : {}
     | ID()
     | "!" Expression()
     | "(" Expression() ")"
-    | LOOKAHEAD(1)
+    | LOOKAHEAD(2) // lookahead aumentado em 1
       <NEW> <INT> "[" Expression() "]"
     | <NEW> ID() "(" ")"
 }
@@ -176,7 +185,7 @@ void Expr1() : {}
 void Expr2() : {}
 {
     BinaryOperator() Expression()
-    | LOOKAHEAD(1)
+    | LOOKAHEAD(2) // lookahead aumentado em 1
       "." <LENGTH>
     | "." ID() "(" ( Expression() ( "," Expression() )* )? ")"
 }
