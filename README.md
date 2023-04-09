@@ -1,27 +1,10 @@
-# Compiled class file
-*.class
+# compiladores
 
-# Log file
-*.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-
-# Default ignored files
-/shelf/
-/workspace.xml
+#### compilando um arquivo no javaCC:
+```
+javacc arquivo.jj
+```
+#### links:<br>
+[MiniJava](https://www.cambridge.org/resources/052182060X/)<br>
+[javaCC](https://javacc.github.io/javacc/)<br>
+[pdf ensinando](https://www.cin.ufpe.br/~in1007/transparencias/MaterialApoio/javacc-tutorial.pdf)<br>
