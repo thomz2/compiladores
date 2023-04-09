@@ -5,12 +5,41 @@ public class MyParser {
         try {
             String input = readFile(args[0]);
             MyParser parser = new MyParser(new StringReader(input));
-            parser.Prog();
-            System.out.println("Syntax is okay");
-        } catch (Throwable e) {
-            System.out.println("Syntax check failed: " + e.getMessage());
-        }
+            List<Token> tokens = new ArrayList<Token>();
 
+            // analise lexica
+            try {
+                while (true) {
+                    Token token = parser.getNextToken();
+                    if (token.kind == 0) {
+                        break;
+                    }
+                    tokens.add(token);
+                    // exibir token atual
+                    System.out.println("Token atual: " + token.image);
+                }
+            } catch (TokenMgrError e) {
+                // informações do token quando ocorrer um erro léxico
+                System.out.println("Erro lexico: " + e.getMessage());
+                System.out.println("Tokens correspondidos:");
+                for (Token token : tokens) {
+                    System.out.println("Linha " + token.beginLine + ", Coluna " + token.beginColumn +
+                            ": Imagem: \"" + token.image + "\", Kind: " + token.kind);
+                }
+            }
+
+            // analise sintatica
+            try {
+                parser.ReInit(new StringReader(input));
+                parser.Prog();
+                System.out.println("Sintaxe ok");
+            } catch (Throwable e) {
+                System.out.println("Sintaxe falhou: " + e.getMessage());
+            }
+
+        } catch (Throwable e) {
+            System.out.println("Erro ao ler o arquivo");
+        }
     }
 
     private static String readFile(String filePath) throws Exception {
