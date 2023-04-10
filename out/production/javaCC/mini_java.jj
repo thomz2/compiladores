@@ -69,9 +69,9 @@ SKIP :
 }
 TOKEN :
 { < WHILE: "while" >
-| < BEGIN: "begin" >
-| < END: "end" >
-| < DO: "do" >
+//| < BEGIN: "begin" >
+//| < END: "end" >
+//| < DO: "do" >
 | < IF: "if" >
 | < THEN: "then" >
 | < ELSE: "else" >
@@ -144,9 +144,9 @@ void MethodDeclaration() : {}
 
 void Type() : {}
 {
-    LOOKAHEAD(2)
-      <INT>
-    | <INT> "/[" "]"
+    LOOKAHEAD(3)
+    <INT> "[" "]"
+    | <INT>
     | <BOOLEAN>
     | ID()
 }

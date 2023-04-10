@@ -11,69 +11,63 @@ public interface MyParserConstants {
   /** RegularExpression Id. */
   int WHILE = 7;
   /** RegularExpression Id. */
-  int BEGIN = 8;
+  int IF = 8;
   /** RegularExpression Id. */
-  int END = 9;
+  int THEN = 9;
   /** RegularExpression Id. */
-  int DO = 10;
+  int ELSE = 10;
   /** RegularExpression Id. */
-  int IF = 11;
+  int SEMI = 11;
   /** RegularExpression Id. */
-  int THEN = 12;
+  int ASSIGN = 12;
   /** RegularExpression Id. */
-  int ELSE = 13;
+  int CLASS = 13;
   /** RegularExpression Id. */
-  int SEMI = 14;
+  int PUBLIC = 14;
   /** RegularExpression Id. */
-  int ASSIGN = 15;
+  int STATIC = 15;
   /** RegularExpression Id. */
-  int CLASS = 16;
+  int VOID = 16;
   /** RegularExpression Id. */
-  int PUBLIC = 17;
+  int MAIN = 17;
   /** RegularExpression Id. */
-  int STATIC = 18;
+  int NEW = 18;
   /** RegularExpression Id. */
-  int VOID = 19;
+  int EXTENDS = 19;
   /** RegularExpression Id. */
-  int MAIN = 20;
+  int RETURN = 20;
   /** RegularExpression Id. */
-  int NEW = 21;
+  int STRING = 21;
   /** RegularExpression Id. */
-  int EXTENDS = 22;
+  int INT = 22;
   /** RegularExpression Id. */
-  int RETURN = 23;
+  int BOOLEAN = 23;
   /** RegularExpression Id. */
-  int STRING = 24;
+  int PRINT = 24;
   /** RegularExpression Id. */
-  int INT = 25;
+  int LENGTH = 25;
   /** RegularExpression Id. */
-  int BOOLEAN = 26;
+  int TRUE = 26;
   /** RegularExpression Id. */
-  int PRINT = 27;
+  int FALSE = 27;
   /** RegularExpression Id. */
-  int LENGTH = 28;
+  int THIS = 28;
   /** RegularExpression Id. */
-  int TRUE = 29;
+  int OP_AND = 29;
   /** RegularExpression Id. */
-  int FALSE = 30;
+  int OP_LESS = 30;
   /** RegularExpression Id. */
-  int THIS = 31;
+  int OP_ADD = 31;
   /** RegularExpression Id. */
-  int OP_AND = 32;
+  int OP_SUB = 32;
   /** RegularExpression Id. */
-  int OP_LESS = 33;
+  int OP_MULT = 33;
   /** RegularExpression Id. */
-  int OP_ADD = 34;
+  int LETTER = 34;
   /** RegularExpression Id. */
-  int OP_SUB = 35;
+  int ID = 35;
   /** RegularExpression Id. */
-  int OP_MULT = 36;
-  /** RegularExpression Id. */
-  int LETTER = 37;
-  /** RegularExpression Id. */
-  int ID = 38;
-  /** RegularExpression Id. */
-  int INTEGER_LITERAL = 39;
+  int INTEGER_LITERAL = 36;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -88,9 +82,6 @@ public interface MyParserConstants {
     "<token of kind 5>",
     "<token of kind 6>",
     "\"while\"",
-    "\"begin\"",
-    "\"end\"",
-    "\"do\"",
     "\"if\"",
     "\"then\"",
     "\"else\"",
@@ -127,7 +118,6 @@ public interface MyParserConstants {
     "\")\"",
     "\"}\"",
     "\",\"",
-    "\"/[\"",
     "\"!\"",
     "\".\"",
   };
