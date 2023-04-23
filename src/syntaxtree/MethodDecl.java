@@ -1,6 +1,6 @@
 package syntaxtree;
-import syntaxtree.visitor.TypeVisitor;
-import syntaxtree.visitor.Visitor;
+import syntaxtree.visitor.*;
+
 public class MethodDecl {
     private Type t;
     private Identifier id;

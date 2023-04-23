@@ -1,6 +1,6 @@
 package syntaxtree;
-import syntaxtree.visitor.TypeVisitor;
-import syntaxtree.visitor.Visitor;
+import syntaxtree.visitor.*;
+
 public class MainClass {
     private Identifier class_identifier;
     private Identifier main_args;

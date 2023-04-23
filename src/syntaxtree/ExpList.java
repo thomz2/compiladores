@@ -1,6 +1,8 @@
 package syntaxtree;
 
 import java.util.Vector;
+import syntaxtree.visitor.*;
+
 
 public class ExpList {
     private Vector list;

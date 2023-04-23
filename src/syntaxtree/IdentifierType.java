@@ -1,5 +1,7 @@
 package syntaxtree;
 
+import syntaxtree.visitor.*;
+
 public class IdentifierType extends Type {
     private String identifier_name;
 

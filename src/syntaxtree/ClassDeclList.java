@@ -1,6 +1,7 @@
 package syntaxtree;
 
 import java.util.Vector;
+import syntaxtree.visitor.*;
 
 //list classes
 public class ClassDeclList {
