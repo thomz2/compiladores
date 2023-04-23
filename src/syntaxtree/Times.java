@@ -1,5 +1,6 @@
 package syntaxtree;
-
+import syntaxtree.visitor.TypeVisitor;
+import syntaxtree.visitor.Visitor;
 public class Times extends Exp {
     private Exp e1, e2;
 
@@ -9,6 +10,9 @@ public class Times extends Exp {
     }
 
     public void accept(Visitor v) {
+        v.visit(this);
+    }
+    public Type accept(TypeVisitor v) {
         return v.visit(this);
     }
 }

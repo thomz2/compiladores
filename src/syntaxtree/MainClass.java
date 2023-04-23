@@ -1,5 +1,6 @@
 package syntaxtree;
-
+import syntaxtree.visitor.TypeVisitor;
+import syntaxtree.visitor.Visitor;
 public class MainClass {
     private Identifier class_identifier;
     private Identifier main_args;
@@ -12,6 +13,9 @@ public class MainClass {
     }
 
     public void accept(Visitor v) {
+        v.visit(this);
+    }
+    public Type accept(TypeVisitor v) {
         return v.visit(this);
     }
 }

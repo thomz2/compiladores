@@ -210,7 +210,7 @@ void Statement() : {}
     | ID() "[" Expression() "]" "=" Expression() <SEMI>
 }
 
-void Expression() : {}
+void Expression() : { }
 {
     Expr1() (LOOKAHEAD(2) Expr2())* // lookahead aumentado em 1
 }

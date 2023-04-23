@@ -1,5 +1,5 @@
 package syntaxtree.visitor;
-
+import syntaxtree.*;
 public interface Visitor {
     public void visit(Program n);
     public void visit(MainClass n);
@@ -34,5 +34,5 @@ public interface Visitor {
     public void visit(NewArray n);
     public void visit(NewObject n);
     public void visit(Not n);
-    public void visit(Identifier n)
+    public void visit(Identifier n);
 }

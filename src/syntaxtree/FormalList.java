@@ -20,4 +20,5 @@ public class FormalList {
     public int size() {
         return list.size();
     }
+
 }
