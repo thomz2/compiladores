@@ -23,21 +23,6 @@ public class MyParser {
 
         testaArquivos(filenames);
 
-//        try {
-//            String input = readFile(args[0]);
-//            MyParser parser = new MyParser(new StringReader(input));
-//            List<Token> tokens = analiseLexica(parser, input);
-//
-//            String resultadoAnaliseSintatica = analiseSintatica(parser, input);
-//            if (resultadoAnaliseSintatica.equals("")) {
-//                System.out.println("Sintaxe ok");
-//            } else {
-//                System.out.println("Sintaxe falha: " + resultadoAnaliseSintatica);
-//            }
-//
-//        } catch (Throwable e) {
-//            System.out.println("Erro ao ler o arquivo");
-//        }
     }
 
     private static void testaArquivos(ArrayList<String> filenames) throws Exception {
@@ -224,36 +209,6 @@ void Statement() : {}
       ID() "=" Expression() <SEMI>
     | ID() "[" Expression() "]" "=" Expression() <SEMI>
 }
-
-/*
-void Expression() : {}
-{
-    <THIS>
-    | <TRUE>
-    | <FALSE>
-    | <INTEGER_LITERAL>
-    | ID()
-    | LOOKAHEAD(2)
-      <NEW> <INT> "[" Expression() "]"
-    | <NEW> ID() "(" ")"
-    | "!" Expression()
-    | "(" Expression() ")"
-    | LOOKAHEAD(3)
-      Expression() "." <LENGTH>
-    | Expression() "[" Expression() "]"
-    | Expression() BinaryOperator() Expression()
-    | Expression() "." ID() "(" ( Expression() ( "," Expression() )* )? ")"
-}
-*/
-
-/*
-void Expression() : {}
-{
-    LOOKAHEAD(2) // lookahead aumentado em 1
-      Expr1()
-    | Expr1() Expr2()
-}
- */
 
 void Expression() : {}
 {

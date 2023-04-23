@@ -1,5 +1,5 @@
 // The classes are basically the same as the BinaryTree
-// file except the visitor classes and the accept method
+// file except the syntaxtree.visitor classes and the accept method
 // in the Tree class
 
 class TreeVisitor{
@@ -316,7 +316,7 @@ class Tree{
 	return true ;
     }
 
-    public int accept(Visitor v){
+    public int accept(syntaxtree.visitor.Visitor v){
 	int nti ;
 
 	System.out.println(333);
@@ -328,7 +328,7 @@ class Tree{
 
 
 
-class Visitor {
+class syntaxtree.visitor.Visitor {
     Tree l ;
     Tree r ;
 
@@ -351,7 +351,7 @@ class Visitor {
 }
 
 
-class MyVisitor extends Visitor {
+class MyVisitor extends syntaxtree.visitor.Visitor {
 
     public int visit(Tree n){
 	int nti ;
