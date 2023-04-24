@@ -2,17 +2,17 @@ package syntaxtree;
 import syntaxtree.visitor.*;
 
 public class While extends Statement {
-    private Exp check;
-    private Statement body;
+    public Exp e;
+    public Statement s;
 
-    public While(Exp _e, Statement _s) {
-        check = _e;
-        body = _s;
+    public While(Exp ae, Statement as) {
+        e=ae; s=as;
     }
 
     public void accept(Visitor v) {
         v.visit(this);
     }
+
     public Type accept(TypeVisitor v) {
         return v.visit(this);
     }

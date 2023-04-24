@@ -3,19 +3,19 @@ package syntaxtree;
 import syntaxtree.visitor.*;
 
 public class ArrayAssign extends Statement {
-    private Identifier id;
-    private Exp e1, e2;
+    public Identifier i;
+    public Exp e1,e2;
 
-    public ArrayAssign(Identifier _i, Exp _e1, Exp _e2) {
-        id = _i;
-        e1 = _e1;
-        e2 = _e2;
+    public ArrayAssign(Identifier ai, Exp ae1, Exp ae2) {
+        i=ai; e1=ae1; e2=ae2;
     }
 
     public void accept(Visitor v) {
         v.visit(this);
     }
+
     public Type accept(TypeVisitor v) {
         return v.visit(this);
     }
+
 }

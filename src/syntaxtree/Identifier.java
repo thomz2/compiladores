@@ -2,16 +2,22 @@ package syntaxtree;
 
 import syntaxtree.visitor.*;
 
-
 public class Identifier {
-    private String name;
+    public String s;
 
-    public Identifier(String _s) {
-        name = _s;
+    public Identifier(String as) {
+        s=as;
     }
 
-    @Override
-    public String toString() {
-        return name;
+    public void accept(Visitor v) {
+        v.visit(this);
+    }
+
+    public Type accept(TypeVisitor v) {
+        return v.visit(this);
+    }
+
+    public String toString(){
+        return s;
     }
 }

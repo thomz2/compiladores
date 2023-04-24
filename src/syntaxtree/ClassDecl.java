@@ -2,8 +2,6 @@ package syntaxtree;
 import syntaxtree.visitor.*;
 
 public abstract class ClassDecl {
-    protected Identifier class_identifier;
-    protected VarDeclList vl;
-    protected MethodDeclList ml;
+    public abstract void accept(Visitor v);
+    public abstract Type accept(TypeVisitor v);
 }
-

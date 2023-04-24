@@ -2,18 +2,20 @@ package syntaxtree;
 import syntaxtree.visitor.*;
 
 public class ClassDeclExtends extends ClassDecl {
-    private Identifier extended_identifier;
+    public Identifier i;
+    public Identifier j;
+    public VarDeclList vl;
+    public MethodDeclList ml;
 
-    public ClassDeclExtends(Identifier _i, Identifier _j, VarDeclList _vl, MethodDeclList _ml) {
-        class_identifier = _i;
-        extended_identifier = _j;
-        vl = _vl;
-        ml = _ml;
+    public ClassDeclExtends(Identifier ai, Identifier aj,
+                            VarDeclList avl, MethodDeclList aml) {
+        i=ai; j=aj; vl=avl; ml=aml;
     }
 
     public void accept(Visitor v) {
         v.visit(this);
     }
+
     public Type accept(TypeVisitor v) {
         return v.visit(this);
     }

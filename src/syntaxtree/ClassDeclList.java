@@ -3,7 +3,6 @@ package syntaxtree;
 import java.util.Vector;
 import syntaxtree.visitor.*;
 
-//list classes
 public class ClassDeclList {
     private Vector list;
 
@@ -15,8 +14,8 @@ public class ClassDeclList {
         list.addElement(n);
     }
 
-    public ClassDecl elementAt(int i) {
-        return (ClassDecl) list.elementAt(i);
+    public ClassDecl elementAt(int i)  {
+        return (ClassDecl)list.elementAt(i);
     }
 
     public int size() {

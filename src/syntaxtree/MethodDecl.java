@@ -2,26 +2,22 @@ package syntaxtree;
 import syntaxtree.visitor.*;
 
 public class MethodDecl {
-    private Type t;
-    private Identifier id;
-    private FormalList fl;
-    private VarDeclList vl;
-    private StatementList sl;
-    private Exp return_exp;
+    public Type t;
+    public Identifier i;
+    public FormalList fl;
+    public VarDeclList vl;
+    public StatementList sl;
+    public Exp e;
 
-    public MethodDecl(Type _t, Identifier _i, FormalList _fl,
-                      VarDeclList _vl, StatementList _sl, Exp _ret) {
-        t = _t;
-        id = _i;
-        fl = _fl;
-        vl = _vl;
-        sl = _sl;
-        return_exp = _ret;
+    public MethodDecl(Type at, Identifier ai, FormalList afl, VarDeclList avl,
+                      StatementList asl, Exp ae) {
+        t=at; i=ai; fl=afl; vl=avl; sl=asl; e=ae;
     }
 
     public void accept(Visitor v) {
         v.visit(this);
     }
+
     public Type accept(TypeVisitor v) {
         return v.visit(this);
     }

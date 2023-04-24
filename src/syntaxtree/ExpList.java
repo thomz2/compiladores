@@ -3,7 +3,6 @@ package syntaxtree;
 import java.util.Vector;
 import syntaxtree.visitor.*;
 
-
 public class ExpList {
     private Vector list;
 
@@ -15,8 +14,8 @@ public class ExpList {
         list.addElement(n);
     }
 
-    public Exp elementAt(int i) {
-        return (Exp) list.elementAt(i);
+    public Exp elementAt(int i)  {
+        return (Exp)list.elementAt(i);
     }
 
     public int size() {

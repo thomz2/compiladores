@@ -15,8 +15,8 @@ public class MethodDeclList {
         list.addElement(n);
     }
 
-    public MethodDecl elementAt(int i) {
-        return (MethodDecl) list.elementAt(i);
+    public MethodDecl elementAt(int i)  {
+        return (MethodDecl)list.elementAt(i);
     }
 
     public int size() {

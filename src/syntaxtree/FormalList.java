@@ -3,7 +3,6 @@ package syntaxtree;
 import java.util.Vector;
 import syntaxtree.visitor.*;
 
-
 public class FormalList {
     private Vector list;
 
@@ -15,12 +14,11 @@ public class FormalList {
         list.addElement(n);
     }
 
-    public Formal elementAt(int i) {
-        return (Formal) list.elementAt(i);
+    public Formal elementAt(int i)  {
+        return (Formal)list.elementAt(i);
     }
 
     public int size() {
         return list.size();
     }
-
 }
