@@ -2,6 +2,7 @@
 PARSER_BEGIN(MyParser)
 
 import syntaxtree.*;
+import syntaxtree.visitor.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,15 +16,22 @@ public class MyParser {
 
         ArrayList<String> filenames = new ArrayList<String>();
         filenames.add("./src/testes/Factorial.txt");
-        filenames.add("./src/testes/TreeVisitor.txt");
-        filenames.add("./src/testes/BinaryTree.txt");
-        filenames.add("./src/testes/BubbleSort.txt");
-        filenames.add("./src/testes/BynarySearch.txt");
-        filenames.add("./src/testes/LinearSearch.txt");
-        filenames.add("./src/testes/LinkedList.txt");
-        filenames.add("./src/testes/QuickSort.txt");
+//        filenames.add("./src/testes/TreeVisitor.txt");
+//        filenames.add("./src/testes/BinaryTree.txt");
+//        filenames.add("./src/testes/BubbleSort.txt");
+//        filenames.add("./src/testes/BynarySearch.txt");
+//        filenames.add("./src/testes/LinearSearch.txt");
+//        filenames.add("./src/testes/LinkedList.txt");
+//        filenames.add("./src/testes/QuickSort.txt");
 
-        testaArquivos(filenames);
+//        testaArquivos(filenames);
+
+        try {
+            Program raiz = new MyParser(new StringReader(readFile(filenames.get(0)))).Prog();
+            raiz.accept(new PrettyPrintVisitor());
+        } catch (ParseException e) {
+            System.out.println(e.toString());
+        }
 
     }
 
@@ -151,8 +159,8 @@ TOKEN :
 Program Prog() :
 {
     MainClass mc;
-    ClassDecl = cd;
-    ClassDeclList cl = new ClassDecList();
+    ClassDecl cd;
+    ClassDeclList cl = new ClassDeclList();
 }
 {
     mc = MainClass()
@@ -210,7 +218,7 @@ MethodDecl MethodDeclaration() :
 {
     Type t, taux; Identifier i, iaux; Exp e; MethodDecl md; VarDecl vd; Statement st;
 
-    FormalList fl; VarDeclList vl = new VarDeclList(); Statement sl = new StatementList();
+    FormalList fl = new FormalList(); VarDeclList vl = new VarDeclList(); StatementList sl = new StatementList();
 }
 {
     <PUBLIC> t = Type() i = ID() "("
@@ -238,57 +246,67 @@ Type Type() :
 
 Statement Statement() :
 {
-   Statement st; Identifier id;
+   Statement s, s2;
+   Exp e, e2; Identifier id;
+   StatementList sl = new StatementList();
 }
 {
-    "{" (Statement())* "}"
-    | <IF> "(" Expression() ")" Statement() <ELSE> Statement()
-    | <WHILE> "(" Expression() ")" Statement()
-    | <PRINT> "(" Expression() ")" <SEMI>
+    "{" (s = Statement() {sl.addElement(s);})* "}" { return new Block(sl); }
+    | <IF> "(" e = Expression() ")" s = Statement() <ELSE> s2 = Statement() { return new If(e, s, s2); }
+    | <WHILE> "(" e = Expression() ")" s = Statement() { return new While(e, s); }
+    | <PRINT> "(" e = Expression() ")" <SEMI> { return new Print(e); }
     | LOOKAHEAD(2) // coloquei de 6 para 2
-      ID() "=" Expression() <SEMI>
-    | ID() "[" Expression() "]" "=" Expression() <SEMI>
+      id = ID() "=" e = Expression() <SEMI> { return new Assign(id, e); }
+    | id = ID() "[" e = Expression() "]" "=" e2 = Expression() <SEMI> { return new ArrayAssign(id, e, e2); }
 }
 
 Exp Expression() :
 {
-    Exp e1, e2 = null;
+    Exp e1;
 }
 {
-    Expr1() (LOOKAHEAD(2) Expr2())* // lookahead aumentado em 1
+    e1 = Expr1() (LOOKAHEAD(2) e1 = Expr2(e1))* // ((((a+b)+c)+d)+e)
+    { return e1; }
 }
 
-void Expr1() : {}
+Exp Expr1() :
 {
-    <THIS>
-    | <TRUE>
-    | <FALSE>
-    | <INTEGER_LITERAL>
-    | ID()
-    | "!" Expression()
-    | "(" Expression() ")"
+    Exp e, e2;
+    Token t;
+    Identifier id;
+}
+{
+    <THIS> { e = new This(); return e; }
+    | <TRUE> { e = new True(); return e; }
+    | <FALSE> { e = new False(); return e; }
+    | t = <INTEGER_LITERAL> { e = new IntegerLiteral(Integer.parseInt(t.image)); return e; }
+    | id = ID() { e = new IdentifierExp(id.toString()); return e; }
+    | "!" e2 = Expression() { e = new Not(e2); return e; }
+    | "(" e2 = Expression() ")" { e = e2; return e; }
     | LOOKAHEAD(2) // lookahead aumentado em 1
-      <NEW> <INT> "[" Expression() "]"
-    | <NEW> ID() "(" ")"
+      <NEW> <INT> "[" e2 = Expression() "]" { e = new NewArray(e2); return e; }
+    | <NEW> id = ID() "(" ")" { e = new NewObject(id); return e; }
 }
 
-void Expr2() : {}
+Exp Expr2(Exp left_exp) :
 {
-    BinaryOperator() Expression()
-    | "[" Expression() "]"
+    Exp right_exp; Exp final_exp;
+    Identifier id;
+    ExpList el = new ExpList();
+}
+{
+    "&&" right_exp = Expression() { return new And(left_exp, right_exp); }
+    | "<" right_exp = Expression() { return new LessThan(left_exp, right_exp); }
+    | "+" right_exp = Expression() { return new Plus(left_exp, right_exp); }
+    | "-" right_exp = Expression() { return new Minus(left_exp, right_exp); }
+    | "*" right_exp = Expression() { return new Times(left_exp, right_exp); }
+    | "[" right_exp = Expression() "]" { return new ArrayLookup(left_exp, right_exp); }
     | LOOKAHEAD(2) // lookahead aumentado em 1
-      "." <LENGTH>
-    | "." ID() "(" ( Expression() ( "," Expression() )* )? ")"
-}
-
-void BinaryOperator() :
-{
-
-}
-{
-    <OP_AND> | <OP_LESS> | <OP_ADD> | <OP_SUB> | <OP_MULT>
+      "." <LENGTH> { return new ArrayLength(left_exp); }
+    | "." id = ID() "(" ( right_exp = Expression() { el.addElement(right_exp);}
+        ( "," right_exp = Expression() { el.addElement(right_exp);} )* )? ")" { return new Call(left_exp, id, el); }
 }
 
 // FEITO
 Identifier ID() : {Token t;}
-{ t = <ID> {return new Identifier(t.image());}}
+{ t = <ID> {return new Identifier(t.image);}}

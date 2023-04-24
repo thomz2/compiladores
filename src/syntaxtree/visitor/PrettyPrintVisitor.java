@@ -1,21 +1,22 @@
 package syntaxtree.visitor;
 
 import syntaxtree.*;
+import syntaxtree.visitor.*;
 
 public class PrettyPrintVisitor implements Visitor {
 
     // MainClass m;
     // ClassDeclList cl;
     public void visit(Program n) {
-        n.mc.accept(this);
+        n.m.accept(this);
         for ( int i = 0; i < n.cl.size(); i++ ) {
             System.out.println();
             n.cl.elementAt(i).accept(this);
         }
     }
 
-    Identifier i1,i2;
-    Statement s;
+    // Identifier i1,i2;
+    // Statement s;
     public void visit(MainClass n) {
         System.out.print("class ");
         n.i1.accept(this);
