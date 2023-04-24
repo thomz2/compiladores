@@ -151,8 +151,8 @@ TOKEN :
 Program Prog() :
 {
     MainClass mc;
-    ClassDecl = cd;
-    ClassDeclList cl = new ClassDecList();
+    ClassDecl cd;
+    ClassDeclList cl = new ClassDeclList();
 }
 {
     mc = MainClass()
@@ -240,7 +240,7 @@ Statement Statement() :
 {
    Statement s, s2;
    Exp e, e2; Identifier id;
-   StatementList sl;
+   StatementList sl = new StatementList();
 }
 {
     "{" (s = Statement() {sl.addElement(s);})* "}" { return new Block(sl); }
@@ -272,7 +272,7 @@ Exp Expr1() :
     | <TRUE> { e = new True(); return e; }
     | <FALSE> { e = new False(); return e; }
     | t = <INTEGER_LITERAL> { e = new IntegerLiteral(Integer.parseInt(t.image)); return e; }
-    | id = ID() { e = new IdentifierExp(id); return e; }
+    | id = ID() { e = new IdentifierExp(id.toString()); return e; }
     | "!" e2 = Expression() { e = new Not(e2); return e; }
     | "(" e2 = Expression() ")" { e = e2; return e; }
     | LOOKAHEAD(2) // lookahead aumentado em 1
@@ -283,7 +283,7 @@ Exp Expr1() :
 Exp Expr2(Exp left_exp) :
 {
     Exp right_exp; Exp final_exp;
-    Identifier = id;
+    Identifier id;
     ExpList el = new ExpList();
 }
 {
@@ -292,17 +292,12 @@ Exp Expr2(Exp left_exp) :
     | "+" right_exp = Expression() { return new Plus(left_exp, right_exp); }
     | "-" right_exp = Expression() { return new Minus(left_exp, right_exp); }
     | "*" right_exp = Expression() { return new Times(left_exp, right_exp); }
-    | "[" Expression() "]" { return new ArrayLookup(left_exp, right_exp); }
+    | "[" right_exp = Expression() "]" { return new ArrayLookup(left_exp, right_exp); }
     | LOOKAHEAD(2) // lookahead aumentado em 1
-      "." <LENGTH> { return new ArrayLength(left_exp, right_exp); }
+      "." <LENGTH> { return new ArrayLength(left_exp); }
     | "." id = ID() "(" ( right_exp = Expression() { el.addElement(right_exp);}
         ( "," right_exp = Expression() { el.addElement(right_exp);} )* )? ")" { return new Call(left_exp, id, el); }
 }
-
-//void BinaryOperator(Exp left_exp, Exp right_exp) : {}
-//{
-//    <OP_AND> | <OP_LESS> | <OP_ADD> | <OP_SUB> | <OP_MULT>
-//}
 
 // FEITO
 Identifier ID() : {Token t;}
