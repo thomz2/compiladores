@@ -26,7 +26,7 @@ public class MyParser implements MyParserConstants {
 
         try {
             Program raiz = new MyParser(new StringReader(readFile(filenames.get(0)))).Prog();
-            raiz.accept(new PrettyPrintVisitor());
+            raiz.accept(new TypeDepthFirstVisitor());
         } catch (ParseException e) {
             System.out.println(e.toString());
         }
