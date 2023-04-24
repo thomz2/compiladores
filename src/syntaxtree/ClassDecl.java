@@ -6,3 +6,4 @@ public abstract class ClassDecl {
     protected VarDeclList vl;
     protected MethodDeclList ml;
 }
+

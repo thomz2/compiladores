@@ -1,7 +1,9 @@
 package symbol;
 
 public class Table {
-    public Table();
+    public Table() {
+
+    }
     public void put(Symbol key, Object value);
     public Object get(Symbol key);
     public void beginScope();

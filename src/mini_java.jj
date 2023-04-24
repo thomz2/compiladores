@@ -1,6 +1,8 @@
 
 PARSER_BEGIN(MyParser)
 
+import syntaxtree.*;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -100,9 +102,6 @@ public class MyParser {
         return stringBuilder.toString();
     }
 }
-
-
-
 PARSER_END(MyParser)
 
 
@@ -117,9 +116,6 @@ SKIP :
 }
 TOKEN :
 { < WHILE: "while" >
-//| < BEGIN: "begin" >
-//| < END: "end" >
-//| < DO: "do" >
 | < IF: "if" >
 | < THEN: "then" >
 | < ELSE: "else" >
@@ -151,57 +147,101 @@ TOKEN :
 | < INTEGER_LITERAL : ["0"-"9"] (["0"-"9"])* >
 }
 
-void Prog() : {}
+// FEITO
+Program Prog() :
 {
-    MainClass()
-    (ClassDeclaration())*
+    MainClass mc;
+    ClassDecl = cd;
+    ClassDeclList cl = new ClassDecList();
+}
+{
+    mc = MainClass()
+    (cd = ClassDeclaration() {cl.addElement(cd);})*
     <EOF>
+
+    {return new Program(mc, cl);}
 }
 
-void MainClass() : {}
+// FEITO
+MainClass MainClass() :
 {
-    <CLASS> ID() "{"
-        <PUBLIC> <STATIC> <VOID> <MAIN> "(" <STRING> "[" "]" ID() ")" "{"
-            Statement()
+    Identifier ci, ma;
+    Statement s;
+}
+{
+    <CLASS> ci = ID() "{"
+        <PUBLIC> <STATIC> <VOID> <MAIN> "(" <STRING> "[" "]" ma = ID() ")" "{"
+            s = Statement()
         "}"
     "}"
+
+    {return new MainClass(ci, ma, s);}
 }
 
-void ClassDeclaration() : {}
+// FEITO
+ClassDecl ClassDeclaration() :
 {
-    <CLASS> ID() (<EXTENDS> ID())? "{"
-        (VarDeclaration())* (MethodDeclaration())*
+    Identifier id1, id2 = null;
+    VarDecl vd; VarDeclList vl = new VarDeclList();
+    MethodDecl md; MethodDeclList ml = new MethodDeclList();
+}
+{
+    <CLASS> id1 = ID()
+    (<EXTENDS> id2 = ID())? "{"
+        (vd = VarDeclaration() {vl.addElement(vd);})* (md = MethodDeclaration() {ml.addElement(md);})*
     "}"
+
+    {return (id2 == null) ? new ClassDeclSimple(id1, vl, ml) : new ClassDeclExtends(id1, id2, vl, ml);}
 }
 
-void VarDeclaration() : {}
+// FEITO
+VarDecl VarDeclaration() :
 {
-    Type() ID() <SEMI>
+    Type t; Identifier i;
+}
+{
+    t = Type() i = ID() <SEMI>
+
+    {return new VarDecl(t, i);}
 }
 
-void MethodDeclaration() : {}
+// FEITO
+MethodDecl MethodDeclaration() :
 {
-    <PUBLIC> Type() ID() "("
-        (Type() ID() ( "," Type() ID())* )?
+    Type t, taux; Identifier i, iaux; Exp e; MethodDecl md; VarDecl vd; Statement st;
+
+    FormalList fl; VarDeclList vl = new VarDeclList(); Statement sl = new StatementList();
+}
+{
+    <PUBLIC> t = Type() i = ID() "("
+        (taux = Type() iaux = ID() {fl.addElement(new Formal(taux, iaux));} ( "," taux = Type() iaux = ID() {fl.addElement(new Formal(taux, iaux));})* )?
     ")" "{"
-        (LOOKAHEAD(2) VarDeclaration())*
-        (Statement())*
-        "return" Expression() <SEMI>
+        (LOOKAHEAD(2) vd = VarDeclaration() {vl.addElement(vd);})*
+        (st = Statement() {sl.addElement(st);})*
+        "return" e = Expression() <SEMI>
     "}"
+    {return new MethodDecl(t, i, fl, vl, sl, e);}
 }
 
-void Type() : {}
+// FEITO, VER SE O ID FUNCIONA
+void Type() :
+{
+    String id;
+}
 {
     LOOKAHEAD(3)
-    <INT> "[" "]"
-    | <INT>
-    | <BOOLEAN>
-    | ID()
+    <INT> "[" "]" {return new IntArrayType();}
+    | <INT> {return new IntegerType();}
+    | <BOOLEAN> {return new BooleanType();}
+    | id = ID() {return new IdentifierType(id.intern());} // ver se da certo
 }
 
-void Statement() : {}
+Statement Statement() :
 {
-    "{" (Statement())* "}"
+   Statement st; Identifier id;
+}
+{
+    "{" (Statement() {return Statement()})* "}"
     | <IF> "(" Expression() ")" Statement() <ELSE> Statement()
     | <WHILE> "(" Expression() ")" Statement()
     | <PRINT> "(" Expression() ")" <SEMI>
@@ -210,7 +250,10 @@ void Statement() : {}
     | ID() "[" Expression() "]" "=" Expression() <SEMI>
 }
 
-void Expression() : { }
+Exp Expression() :
+{
+    Exp e1, e2 = null;
+}
 {
     Expr1() (LOOKAHEAD(2) Expr2())* // lookahead aumentado em 1
 }
