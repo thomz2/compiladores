@@ -224,16 +224,16 @@ MethodDecl MethodDeclaration() :
 }
 
 // FEITO, VER SE O ID FUNCIONA
-void Type() :
+Type Type() :
 {
-    String id;
+    Identifier id;
 }
 {
     LOOKAHEAD(3)
     <INT> "[" "]" {return new IntArrayType();}
     | <INT> {return new IntegerType();}
     | <BOOLEAN> {return new BooleanType();}
-    | id = ID() {return new IdentifierType(id.intern());} // ver se da certo
+    | id = ID() {return new IdentifierType(id.toString());} // ver se da certo
 }
 
 Statement Statement() :
@@ -241,7 +241,7 @@ Statement Statement() :
    Statement st; Identifier id;
 }
 {
-    "{" (Statement() {return Statement()})* "}"
+    "{" (Statement())* "}"
     | <IF> "(" Expression() ")" Statement() <ELSE> Statement()
     | <WHILE> "(" Expression() ")" Statement()
     | <PRINT> "(" Expression() ")" <SEMI>
@@ -281,9 +281,14 @@ void Expr2() : {}
     | "." ID() "(" ( Expression() ( "," Expression() )* )? ")"
 }
 
-void BinaryOperator() : {}
+void BinaryOperator() :
+{
+
+}
 {
     <OP_AND> | <OP_LESS> | <OP_ADD> | <OP_SUB> | <OP_MULT>
 }
 
-void ID() : {} { <ID> }
+// FEITO
+Identifier ID() : {Token t;}
+{ t = <ID> {return new Identifier(t.image());}}

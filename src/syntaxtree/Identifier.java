@@ -9,4 +9,9 @@ public class Identifier {
     public Identifier(String _s) {
         name = _s;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
