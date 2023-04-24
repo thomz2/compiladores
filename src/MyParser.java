@@ -103,8 +103,8 @@ public class MyParser implements MyParserConstants {
 // FEITO
   static final public Program Prog() throws ParseException {
     MainClass mc;
-    ClassDecl = cd;
-    ClassDeclList cl = new ClassDecList();
+    ClassDecl cd;
+    ClassDeclList cl = new ClassDeclList();
     mc = MainClass();
     label_1:
     while (true) {
@@ -213,7 +213,7 @@ public class MyParser implements MyParserConstants {
   static final public MethodDecl MethodDeclaration() throws ParseException {
     Type t, taux; Identifier i, iaux; Exp e; MethodDecl md; VarDecl vd; Statement st;
 
-    FormalList fl; VarDeclList vl = new VarDeclList(); Statement sl = new StatementList();
+    FormalList fl = new FormalList(); VarDeclList vl = new VarDeclList(); Statement sl = new StatementList();
     jj_consume_token(PUBLIC);
     t = Type();
     i = ID();
@@ -282,21 +282,27 @@ public class MyParser implements MyParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  static final public void Type() throws ParseException {
+// FEITO, VER SE O ID FUNCIONA
+  static final public Type Type() throws ParseException {
+    Identifier id;
     if (jj_2_2(3)) {
       jj_consume_token(INT);
       jj_consume_token(39);
       jj_consume_token(40);
+                   {if (true) return new IntArrayType();}
     } else {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case INT:
         jj_consume_token(INT);
+             {if (true) return new IntegerType();}
         break;
       case BOOLEAN:
         jj_consume_token(BOOLEAN);
+                 {if (true) return new BooleanType();}
         break;
       case ID:
-        ID();
+        id = ID();
+                 {if (true) return new IdentifierType(id.toString());}
         break;
       default:
         jj_la1[7] = jj_gen;
@@ -304,10 +310,11 @@ public class MyParser implements MyParserConstants {
         throw new ParseException();
       }
     }
+    throw new Error("Missing return statement in function");
   }
 
   static final public Statement Statement() throws ParseException {
-   Statement st; Identifier i;
+   Statement st; Identifier id;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case 37:
       jj_consume_token(37);
@@ -533,8 +540,12 @@ public class MyParser implements MyParserConstants {
     }
   }
 
-  static final public void ID() throws ParseException {
-    jj_consume_token(ID);
+// FEITO
+  static final public Identifier ID() throws ParseException {
+                   Token t;
+    t = jj_consume_token(ID);
+            {if (true) return new Identifier(t.image);}
+    throw new Error("Missing return statement in function");
   }
 
   static private boolean jj_2_1(int xla) {
@@ -579,63 +590,7 @@ public class MyParser implements MyParserConstants {
     finally { jj_save(5, xla); }
   }
 
-  static private boolean jj_3R_14() {
-    if (jj_scan_token(39)) return true;
-    if (jj_3R_17()) return true;
-    return false;
-  }
-
-  static private boolean jj_3_2() {
-    if (jj_scan_token(INT)) return true;
-    if (jj_scan_token(39)) return true;
-    if (jj_scan_token(40)) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_12() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_2()) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(22)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(23)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(35)) return true;
-    }
-    }
-    }
-    return false;
-  }
-
-  static private boolean jj_3R_11() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_13()) {
-    jj_scanpos = xsp;
-    if (jj_3R_14()) {
-    jj_scanpos = xsp;
-    if (jj_3_6()) {
-    jj_scanpos = xsp;
-    if (jj_3R_15()) return true;
-    }
-    }
-    }
-    return false;
-  }
-
-  static private boolean jj_3R_13() {
-    if (jj_3R_16()) return true;
-    if (jj_3R_17()) return true;
-    return false;
-  }
-
-  static private boolean jj_3_1() {
-    if (jj_3R_10()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_21() {
+  static private boolean jj_3R_26() {
     if (jj_scan_token(NEW)) return true;
     return false;
   }
@@ -646,22 +601,32 @@ public class MyParser implements MyParserConstants {
     return false;
   }
 
-  static private boolean jj_3R_20() {
+  static private boolean jj_3R_25() {
     if (jj_scan_token(38)) return true;
     return false;
   }
 
-  static private boolean jj_3R_19() {
+  static private boolean jj_3_1() {
+    if (jj_3R_10()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_24() {
     if (jj_scan_token(44)) return true;
     return false;
   }
 
-  static private boolean jj_3_4() {
+  static private boolean jj_3R_23() {
     if (jj_3R_11()) return true;
     return false;
   }
 
-  static private boolean jj_3R_18() {
+  static private boolean jj_3_4() {
+    if (jj_3R_12()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_22() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(28)) {
@@ -672,15 +637,15 @@ public class MyParser implements MyParserConstants {
     jj_scanpos = xsp;
     if (jj_scan_token(36)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(35)) {
+    if (jj_3R_23()) {
     jj_scanpos = xsp;
-    if (jj_3R_19()) {
+    if (jj_3R_24()) {
     jj_scanpos = xsp;
-    if (jj_3R_20()) {
+    if (jj_3R_25()) {
     jj_scanpos = xsp;
     if (jj_3_5()) {
     jj_scanpos = xsp;
-    if (jj_3R_21()) return true;
+    if (jj_3R_26()) return true;
     }
     }
     }
@@ -692,24 +657,29 @@ public class MyParser implements MyParserConstants {
     return false;
   }
 
-  static private boolean jj_3R_17() {
-    if (jj_3R_18()) return true;
+  static private boolean jj_3R_21() {
+    if (jj_3R_22()) return true;
     return false;
   }
 
   static private boolean jj_3R_10() {
-    if (jj_3R_12()) return true;
-    if (jj_scan_token(35)) return true;
+    if (jj_3R_13()) return true;
+    if (jj_3R_11()) return true;
     return false;
   }
 
   static private boolean jj_3_3() {
-    if (jj_scan_token(35)) return true;
+    if (jj_3R_11()) return true;
     if (jj_scan_token(ASSIGN)) return true;
     return false;
   }
 
-  static private boolean jj_3R_16() {
+  static private boolean jj_3R_11() {
+    if (jj_scan_token(ID)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_20() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(29)) {
@@ -728,15 +698,81 @@ public class MyParser implements MyParserConstants {
     return false;
   }
 
-  static private boolean jj_3R_15() {
+  static private boolean jj_3R_19() {
+    if (jj_3R_11()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_18() {
+    if (jj_scan_token(BOOLEAN)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_17() {
+    if (jj_scan_token(INT)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_16() {
     if (jj_scan_token(45)) return true;
-    if (jj_scan_token(35)) return true;
+    if (jj_3R_11()) return true;
     return false;
   }
 
   static private boolean jj_3_6() {
     if (jj_scan_token(45)) return true;
     if (jj_scan_token(LENGTH)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_15() {
+    if (jj_scan_token(39)) return true;
+    if (jj_3R_21()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_2() {
+    if (jj_scan_token(INT)) return true;
+    if (jj_scan_token(39)) return true;
+    if (jj_scan_token(40)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_13() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_2()) {
+    jj_scanpos = xsp;
+    if (jj_3R_17()) {
+    jj_scanpos = xsp;
+    if (jj_3R_18()) {
+    jj_scanpos = xsp;
+    if (jj_3R_19()) return true;
+    }
+    }
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_12() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_14()) {
+    jj_scanpos = xsp;
+    if (jj_3R_15()) {
+    jj_scanpos = xsp;
+    if (jj_3_6()) {
+    jj_scanpos = xsp;
+    if (jj_3R_16()) return true;
+    }
+    }
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_14() {
+    if (jj_3R_20()) return true;
+    if (jj_3R_21()) return true;
     return false;
   }
 

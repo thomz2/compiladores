@@ -151,8 +151,8 @@ TOKEN :
 Program Prog() :
 {
     MainClass mc;
-    ClassDecl = cd;
-    ClassDeclList cl = new ClassDecList();
+    ClassDecl cd;
+    ClassDeclList cl = new ClassDeclList();
 }
 {
     mc = MainClass()
@@ -210,7 +210,7 @@ MethodDecl MethodDeclaration() :
 {
     Type t, taux; Identifier i, iaux; Exp e; MethodDecl md; VarDecl vd; Statement st;
 
-    FormalList fl; VarDeclList vl = new VarDeclList(); Statement sl = new StatementList();
+    FormalList fl = new FormalList(); VarDeclList vl = new VarDeclList(); StatementList sl = new StatementList();
 }
 {
     <PUBLIC> t = Type() i = ID() "("
@@ -291,4 +291,4 @@ void BinaryOperator() :
 
 // FEITO
 Identifier ID() : {Token t;}
-{ t = <ID> {return new Identifier(t.image());}}
+{ t = <ID> {return new Identifier(t.image);}}
