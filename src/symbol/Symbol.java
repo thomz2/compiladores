@@ -15,13 +15,13 @@ public class Symbol {
         Symbol s = (Symbol) dict.get(u);
         if (s == null) {
             s = new Symbol(u);
-            dict.put(u, s); // chave eh a string, e valor eh o simbolo
+            dict.put(u, s);
         }
         return s;
     };
 
     @Override
     public String toString() {
-        return super.toString();
+        return nome;
     }
 }

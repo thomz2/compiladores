@@ -14,19 +14,19 @@ public class MyParser implements MyParserConstants {
 
         ArrayList<String> filenames = new ArrayList<String>();
         filenames.add("./src/testes/Factorial.txt");
-        filenames.add("./src/testes/TreeVisitor.txt");
-        filenames.add("./src/testes/BinaryTree.txt");
-        filenames.add("./src/testes/BubbleSort.txt");
-        filenames.add("./src/testes/BynarySearch.txt");
-        filenames.add("./src/testes/LinearSearch.txt");
-        filenames.add("./src/testes/LinkedList.txt");
-        filenames.add("./src/testes/QuickSort.txt");
+//        filenames.add("./src/testes/TreeVisitor.txt");
+//        filenames.add("./src/testes/BinaryTree.txt");
+//        filenames.add("./src/testes/BubbleSort.txt");
+//        filenames.add("./src/testes/BynarySearch.txt");
+//        filenames.add("./src/testes/LinearSearch.txt");
+//        filenames.add("./src/testes/LinkedList.txt");
+//        filenames.add("./src/testes/QuickSort.txt");
 
 //        testaArquivos(filenames);
 
         try {
             Program raiz = new MyParser(new StringReader(readFile(filenames.get(0)))).Prog();
-            raiz.accept(new PrettyPrintVisitor());
+            raiz.accept(new TypeDepthFirstVisitor());
         } catch (ParseException e) {
             System.out.println(e.toString());
         }
@@ -40,14 +40,14 @@ public class MyParser implements MyParserConstants {
                 String file = readFile(nome);
                 parser.ReInit(new StringReader(file));
 
-                System.out.println("\u005cnLENDO " + nome + "\u005cn");
+                System.out.println("\nLENDO " + nome + "\n");
 
                 List<Token> tokens = analiseLexica(parser, file);
                 String resultadoAnaliseSintatica = analiseSintatica(parser, file);
                 if (resultadoAnaliseSintatica.equals("")) {
-                    System.out.println("\u005cnSINTAXE OK\u005cn");
+                    System.out.println("\nSINTAXE OK\n");
                 } else {
-                    System.out.println("\u005cnSINTAXE FALHA: " + resultadoAnaliseSintatica + "\u005cn");
+                    System.out.println("\nSINTAXE FALHA: " + resultadoAnaliseSintatica + "\n");
                 }
                 parser.ReInit(new StringReader(file));
             } catch (Exception e) {
@@ -77,7 +77,7 @@ public class MyParser implements MyParserConstants {
             System.out.println("Tokens correspondidos:");
             for (Token token : tokens) {
                 System.out.println("Linha " + token.beginLine + ", Coluna " + token.beginColumn +
-                        ": Imagem: \u005c"" + token.image + "\u005c", Kind: " + token.kind);
+                        ": Imagem: \"" + token.image + "\", Kind: " + token.kind);
             }
         }
 
@@ -860,6 +860,9 @@ public class MyParser implements MyParserConstants {
   static private int jj_ntk;
   static private Token jj_scanpos, jj_lastpos;
   static private int jj_la;
+  /** Whether we are looking ahead. */
+  static private boolean jj_lookingAhead = false;
+  static private boolean jj_semLA;
   static private int jj_gen;
   static final private int[] jj_la1 = new int[17];
   static private int[] jj_la1_0;
@@ -1030,7 +1033,7 @@ public class MyParser implements MyParserConstants {
 
 /** Get the specific Token. */
   static final public Token getToken(int index) {
-    Token t = token;
+    Token t = jj_lookingAhead ? jj_scanpos : token;
     for (int i = 0; i < index; i++) {
       if (t.next != null) t = t.next;
       else t = t.next = token_source.getNextToken();
@@ -1045,7 +1048,7 @@ public class MyParser implements MyParserConstants {
       return (jj_ntk = jj_nt.kind);
   }
 
-  static private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
+  static private java.util.List jj_expentries = new java.util.ArrayList();
   static private int[] jj_expentry;
   static private int jj_kind = -1;
   static private int[] jj_lasttokens = new int[100];
@@ -1061,10 +1064,10 @@ public class MyParser implements MyParserConstants {
         jj_expentry[i] = jj_lasttokens[i];
       }
       boolean exists = false;
-      for (java.util.Iterator<?> it = jj_expentries.iterator(); it.hasNext();) {
-        exists = true;
+      for (java.util.Iterator it = jj_expentries.iterator(); it.hasNext();) {
         int[] oldentry = (int[])(it.next());
         if (oldentry.length == jj_expentry.length) {
+          exists = true;
           for (int i = 0; i < jj_expentry.length; i++) {
             if (oldentry[i] != jj_expentry[i]) {
               exists = false;
@@ -1111,7 +1114,7 @@ public class MyParser implements MyParserConstants {
     jj_add_error_token(0, 0);
     int[][] exptokseq = new int[jj_expentries.size()][];
     for (int i = 0; i < jj_expentries.size(); i++) {
-      exptokseq[i] = jj_expentries.get(i);
+      exptokseq[i] = (int[])jj_expentries.get(i);
     }
     return new ParseException(token, exptokseq, tokenImage);
   }

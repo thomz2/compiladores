@@ -2,16 +2,16 @@ package symbol;
 
 import java.util.Hashtable;
 
-public class SymbolTable {
+public class Table {
     private Hashtable<Symbol, Object> inner_table;
 
-    public SymbolTable() {
+    public Table() {
         inner_table = new Hashtable<Symbol, Object>();
     }
 
     //Retorna o próprio objeto, pra concatenar function calls
     //table.put(a, b).put(c, d).put(e, f)...
-    public SymbolTable put(Symbol key, Object value){
+    public Table put(Symbol key, Object value){
         inner_table.put(key, value);
         return this;
     }

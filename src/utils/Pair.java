@@ -1,12 +1,9 @@
-package symbol;
+package utils;
 
-// Pair class
-class Pair<U, V>
-{
-    public final U first;       // the first field of a pair
-    public final V second;      // the second field of a pair
+public class Pair<U, V> {
+    public final U first;
+    public final V second;
 
-    // Constructs a new pair with specified values
     private Pair(U first, V second)
     {
         this.first = first;
@@ -15,8 +12,7 @@ class Pair<U, V>
 
     @Override
     // Checks specified object is "equal to" the current object or not
-    public boolean equals(Object o)
-    {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -35,10 +31,7 @@ class Pair<U, V>
     }
 
     @Override
-    // Computes hash code for an object to support hash tables
-    public int hashCode()
-    {
-        // use hash codes of the underlying objects
+    public int hashCode() {
         return 31 * first.hashCode() + second.hashCode();
     }
 
@@ -47,31 +40,7 @@ class Pair<U, V>
         return "(" + first + ", " + second + ")";
     }
 
-    // Factory method for creating a typed Pair immutable instance
-    public static <U, V> Pair <U, V> of(U a, V b)
-    {
-        // calls private constructor
+    public static <U, V> Pair <U, V> of(U a, V b) {
         return new Pair<>(a, b);
     }
 }
-//
-//// Program to implement Pair class in Java
-//class Main
-//{
-//    public static void main(String[] args)
-//    {
-//        Pair<String, Integer> p1 = Pair.of("John", 26);
-//        Pair<String, Integer> p2 = Pair.of("Tom", 30);
-//        Pair<String, Integer> p3 = Pair.of("John", 26);
-//
-//        List<Pair<String, Integer>> pairs = new ArrayList<>();
-//        pairs.add(p1);
-//        pairs.add(p2);
-//        pairs.add(p3);
-//
-//        System.out.println(pairs);
-//
-//        Set<Pair<String, Integer>> distinctPairs = new HashSet<>(pairs);
-//        System.out.println(distinctPairs);
-//    }
-//}
