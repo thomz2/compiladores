@@ -28,7 +28,7 @@ public class MyParser {
 
         try {
             Program raiz = new MyParser(new StringReader(readFile(filenames.get(0)))).Prog();
-            raiz.accept(new TypeDepthFirstVisitor());
+            raiz.accept(new PrettyPrintVisitor());
         } catch (ParseException e) {
             System.out.println(e.toString());
         }
