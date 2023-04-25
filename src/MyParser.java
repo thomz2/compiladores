@@ -14,13 +14,13 @@ public class MyParser implements MyParserConstants {
 
         ArrayList<String> filenames = new ArrayList<String>();
         filenames.add("./src/testes/Factorial.txt");
-//        filenames.add("./src/testes/TreeVisitor.txt");
-//        filenames.add("./src/testes/BinaryTree.txt");
-//        filenames.add("./src/testes/BubbleSort.txt");
-//        filenames.add("./src/testes/BynarySearch.txt");
-//        filenames.add("./src/testes/LinearSearch.txt");
-//        filenames.add("./src/testes/LinkedList.txt");
-//        filenames.add("./src/testes/QuickSort.txt");
+        filenames.add("./src/testes/TreeVisitor.txt");
+        filenames.add("./src/testes/BinaryTree.txt");
+        filenames.add("./src/testes/BubbleSort.txt");
+        filenames.add("./src/testes/BynarySearch.txt");
+        filenames.add("./src/testes/LinearSearch.txt");
+        filenames.add("./src/testes/LinkedList.txt");
+        filenames.add("./src/testes/QuickSort.txt");
 
 //        testaArquivos(filenames);
 
