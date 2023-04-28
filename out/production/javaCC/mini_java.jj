@@ -28,8 +28,8 @@ public class MyParser {
 
         try {
             // soh da problema quando tento o arquivo de indice 1 (TreeVisitor.txt)
-            Program raiz = new MyParser(new StringReader(readFile(filenames.get(1)))).Prog();
-            raiz.accept(new PrettyPrintVisitor());
+            Program raiz = new MyParser(new StringReader(readFile(filenames.get(0)))).Prog();
+            raiz.accept(new DepthFirstVisitor());
         } catch (ParseException e) {
             System.out.println(e.toString());
         }

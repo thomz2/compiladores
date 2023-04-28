@@ -47,6 +47,7 @@ public class DepthFirstVisitor implements Visitor {
             VarDecl currentVariable = n.vl.elementAt(i);
             if (!currentClass.addAtb(currentVariable.i.toString(), currentVariable.t.toString())) {
                 //TODO: erro ao adicional atributo
+                System.out.println("a");
             }
         }
 
@@ -66,6 +67,7 @@ public class DepthFirstVisitor implements Visitor {
             }
             if (!currentClass.addMtd(tempMethod)) {
                 //TODO: erro ao adicional metodo
+                System.out.println("a");
             }
         }
         classList.put(Symbol.symbol(n.i.toString()), currentClass);
@@ -96,12 +98,14 @@ public class DepthFirstVisitor implements Visitor {
         for (int i = 0; i < extendedAtrs.size(); i++ ) {
             if (!currentClass.addAtb(extendedAtrs.get(i))) {
                 //TODO: erro ao adicionar atributo
+                System.out.println("a");
             }
         }
         List<MethodTable> extendedMtds = extendedClass.getMetodos();
         for (int i = 0; i < extendedMtds.size(); i++ ) {
             if (!currentClass.addMtd(extendedMtds.get(i))) {
                 //TODO: erro ao adicionar metodo
+                System.out.println("a");
             }
         }
 
@@ -111,6 +115,7 @@ public class DepthFirstVisitor implements Visitor {
             VarDecl currentVariable = n.vl.elementAt(i);
             if (!currentClass.addAtb(currentVariable.i.toString(), currentVariable.t.toString())) {
                 //TODO: erro ao adicionar atributo
+                System.out.println("a");
             }
         }
 
@@ -130,6 +135,7 @@ public class DepthFirstVisitor implements Visitor {
             }
             if (!currentClass.addMtd(tempMethod)) {
                 //TODO: erro ao adicionar metodo
+                System.out.println("a");
             }
         }
         classList.put(Symbol.symbol(n.i.toString()), currentClass);
