@@ -6,7 +6,7 @@ import utils.PrintUtil;
 
 import java.util.ArrayList;
 
-class ClassTable extends Table {
+public class ClassTable extends Table {
 
     private String nome; // declarar nome da variavel como simbolo ou string?
     private Symbol snome;
@@ -53,6 +53,10 @@ class ClassTable extends Table {
         }
     }
 
+//    public ClassTable(String nome, ClassTable pai){
+//
+//    }
+
     public boolean addAtb(String id, String t) {
         for (int i = 0; i < atributos.size(); ++i) {
             if (atributos.get(i).getPair().first.toString().equals(id)) {
@@ -65,6 +69,16 @@ class ClassTable extends Table {
         return true;
     }
 
+    public boolean addAtb(Field atr) {
+        if (atributos.contains(atr)) {
+            error.complain("Classe " + getNome() + "ja tem o atributo" + PrintUtil.typeId(atr.getNome(), atr.getTipo()) + ".");
+            return false;
+        }
+
+        atributos.add(atr);
+        return true;
+    }
+
     public boolean addMtd(String id, String t) {
         for (int i = 0; i < metodos.size(); ++i) {
             if (metodos.get(i).getPair().first.toString().equals(id)) {
@@ -74,6 +88,16 @@ class ClassTable extends Table {
         }
 
         metodos.add(new MethodTable(Pair.of(Symbol.symbol(id), t)));
+        return true;
+    }
+
+    public boolean addMtd(MethodTable mtd) {
+        if (metodos.contains(mtd)) {
+            error.complain("Classe " + getNome() + "ja tem o metodo" +PrintUtil.typeId(mtd.getNome(), mtd.getTipo()) + ".");
+            return false;
+        }
+
+        metodos.add(mtd);
         return true;
     }
 

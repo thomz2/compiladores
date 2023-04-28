@@ -1,8 +1,17 @@
 package syntaxtree.visitor;
 
 import syntaxtree.*;
+import symbol.*;
+import utils.Pair;
+
+import java.util.Dictionary;
+import java.util.Hashtable;
+import java.util.List;
 
 public class DepthFirstVisitor implements Visitor {
+
+    public ClassTable mainClass;
+    public Dictionary<Symbol, ClassTable> classList = new Hashtable<Symbol, ClassTable>();
 
     // MainClass m;
     // ClassDeclList cl;
@@ -19,19 +28,47 @@ public class DepthFirstVisitor implements Visitor {
         n.i1.accept(this);
         n.i2.accept(this);
         n.s.accept(this);
+
+        mainClass = new ClassTable(n.i1.toString(), null);
     }
 
     // Identifier i;
     // VarDeclList vl;
     // MethodDeclList ml;
     public void visit(ClassDeclSimple n) {
+        ClassTable currentClass = new ClassTable(n.i.toString(), null);
+        MethodTable tempMethod;
+
         n.i.accept(this);
+
+        //adiciona as variaveis da classe
         for ( int i = 0; i < n.vl.size(); i++ ) {
             n.vl.elementAt(i).accept(this);
+            VarDecl currentVariable = n.vl.elementAt(i);
+            if (!currentClass.addAtb(currentVariable.i.toString(), currentVariable.t.toString())) {
+                //TODO: erro ao adicional atributo
+            }
         }
+
+        //adiciona os metodos
         for ( int i = 0; i < n.ml.size(); i++ ) {
-            n.ml.elementAt(i).accept(this);
+            MethodDecl currentMethod = n.ml.elementAt(i);
+            currentMethod.accept(this);
+
+            tempMethod = new MethodTable(Pair.of(Symbol.symbol(currentMethod.i.toString()), currentMethod.t.toString()));
+            for (int j = 0; j < currentMethod.fl.size(); j++) {
+                Formal currentFormal = currentMethod.fl.elementAt(j);
+                tempMethod.addParam(currentFormal.i.toString(), currentFormal.t.toString());
+            }
+            for (int j = 0; j < currentMethod.vl.size(); j++) {
+                VarDecl currentVariable = currentMethod.vl.elementAt(j);
+                tempMethod.addLocal(currentVariable.i.toString(), currentVariable.t.toString());
+            }
+            if (!currentClass.addMtd(tempMethod)) {
+                //TODO: erro ao adicional metodo
+            }
         }
+        classList.put(Symbol.symbol(n.i.toString()), currentClass);
     }
 
     // Identifier i;
@@ -39,14 +76,63 @@ public class DepthFirstVisitor implements Visitor {
     // VarDeclList vl;
     // MethodDeclList ml;
     public void visit(ClassDeclExtends n) {
+
+        ClassTable currentClass = new ClassTable(n.i.toString(), null);
+        ClassTable extendedClass = classList.get(Symbol.symbol(n.j.toString()));
+        if (extendedClass != null) {
+            currentClass = new ClassTable(n.i.toString(), extendedClass);
+        } else {
+            //TODO: Erro: classe herdada é inválida/não existe
+            System.out.println("Erro: classe herdada é inválida/não existe");
+        }
+
+        MethodTable tempMethod;
+
         n.i.accept(this);
         n.j.accept(this);
+
+        //adicionar variaveis e metodos da classe herdada
+        List<Field> extendedAtrs = extendedClass.getAtributos();
+        for (int i = 0; i < extendedAtrs.size(); i++ ) {
+            if (!currentClass.addAtb(extendedAtrs.get(i))) {
+                //TODO: erro ao adicionar atributo
+            }
+        }
+        List<MethodTable> extendedMtds = extendedClass.getMetodos();
+        for (int i = 0; i < extendedMtds.size(); i++ ) {
+            if (!currentClass.addMtd(extendedMtds.get(i))) {
+                //TODO: erro ao adicionar metodo
+            }
+        }
+
+        //adiciona as variaveis da classe
         for ( int i = 0; i < n.vl.size(); i++ ) {
             n.vl.elementAt(i).accept(this);
+            VarDecl currentVariable = n.vl.elementAt(i);
+            if (!currentClass.addAtb(currentVariable.i.toString(), currentVariable.t.toString())) {
+                //TODO: erro ao adicionar atributo
+            }
         }
+
+        //adiciona os metodos
         for ( int i = 0; i < n.ml.size(); i++ ) {
-            n.ml.elementAt(i).accept(this);
+            MethodDecl currentMethod = n.ml.elementAt(i);
+            currentMethod.accept(this);
+
+            tempMethod = new MethodTable(Pair.of(Symbol.symbol(currentMethod.i.toString()), currentMethod.t.toString()));
+            for (int j = 0; j < currentMethod.fl.size(); j++) {
+                Formal currentFormal = currentMethod.fl.elementAt(j);
+                tempMethod.addParam(currentFormal.i.toString(), currentFormal.t.toString());
+            }
+            for (int j = 0; j < currentMethod.vl.size(); j++) {
+                VarDecl currentVariable = currentMethod.vl.elementAt(j);
+                tempMethod.addLocal(currentVariable.i.toString(), currentVariable.t.toString());
+            }
+            if (!currentClass.addMtd(tempMethod)) {
+                //TODO: erro ao adicionar metodo
+            }
         }
+        classList.put(Symbol.symbol(n.i.toString()), currentClass);
     }
 
     // Type t;
