@@ -13,6 +13,7 @@ public class MyParser implements MyParserConstants {
     public static void main(String[] args) throws Exception, ParseException, TokenMgrError{
 
         ArrayList<String> filenames = new ArrayList<String>();
+        filenames.add("./src/testes/teste.txt");
         filenames.add("./src/testes/Factorial.txt");
 //        filenames.add("./src/testes/TreeVisitor.txt");
 //        filenames.add("./src/testes/BinaryTree.txt");
@@ -25,8 +26,9 @@ public class MyParser implements MyParserConstants {
 //        testaArquivos(filenames);
 
         try {
+            // soh da problema quando tento o arquivo de indice 1 (TreeVisitor.txt)
             Program raiz = new MyParser(new StringReader(readFile(filenames.get(0)))).Prog();
-            raiz.accept(new TypeDepthFirstVisitor());
+            raiz.accept(new DepthFirstVisitor());
         } catch (ParseException e) {
             System.out.println(e.toString());
         }

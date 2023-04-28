@@ -2,7 +2,9 @@ package syntaxtree.visitor;
 
 import syntaxtree.*;
 import symbol.*;
+import utils.ErrorMsg;
 import utils.Pair;
+import utils.PrintUtil;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -12,6 +14,7 @@ public class DepthFirstVisitor implements Visitor {
 
     public ClassTable mainClass;
     public Dictionary<Symbol, ClassTable> classList = new Hashtable<Symbol, ClassTable>();
+    private ErrorMsg error = new ErrorMsg();
 
     // MainClass m;
     // ClassDeclList cl;
@@ -46,7 +49,8 @@ public class DepthFirstVisitor implements Visitor {
             n.vl.elementAt(i).accept(this);
             VarDecl currentVariable = n.vl.elementAt(i);
             if (!currentClass.addAtb(currentVariable.i.toString(), currentVariable.t.toString())) {
-                //TODO: erro ao adicional atributo
+                error.complain("Erro ao adicionar o atributo " + PrintUtil.typeId(currentVariable.i.toString(), currentVariable.t.toString()) +
+                        "na classe " + currentClass.getNome());
             }
         }
 
@@ -65,7 +69,8 @@ public class DepthFirstVisitor implements Visitor {
                 tempMethod.addLocal(currentVariable.i.toString(), currentVariable.t.toString());
             }
             if (!currentClass.addMtd(tempMethod)) {
-                //TODO: erro ao adicional metodo
+                error.complain("Erro ao adicionar o metodo " + PrintUtil.typeId(currentMethod.i.toString(), currentMethod.t.toString()) +
+                        "na classe " + currentClass.getNome());
             }
         }
         classList.put(Symbol.symbol(n.i.toString()), currentClass);
@@ -82,8 +87,7 @@ public class DepthFirstVisitor implements Visitor {
         if (extendedClass != null) {
             currentClass = new ClassTable(n.i.toString(), extendedClass);
         } else {
-            //TODO: Erro: classe herdada é inválida/não existe
-            System.out.println("Erro: classe herdada é inválida/não existe");
+            error.complain("Erro: classe herdada " + extendedClass.getNome() + " por " + currentClass.getNome() + " é inválida/não existe");
         }
 
         MethodTable tempMethod;
@@ -95,13 +99,17 @@ public class DepthFirstVisitor implements Visitor {
         List<Field> extendedAtrs = extendedClass.getAtributos();
         for (int i = 0; i < extendedAtrs.size(); i++ ) {
             if (!currentClass.addAtb(extendedAtrs.get(i))) {
-                //TODO: erro ao adicionar atributo
+                error.complain("Erro ao adicionar atributo" + PrintUtil.typeId(extendedAtrs.get(i).getNome(), extendedAtrs.get(i).getTipo())
+                        + "vindo da classe " + extendedClass.getNome() + ": classe atual " + currentClass.getNome() + " possui o mesmo atributo" );
+
             }
         }
         List<MethodTable> extendedMtds = extendedClass.getMetodos();
         for (int i = 0; i < extendedMtds.size(); i++ ) {
             if (!currentClass.addMtd(extendedMtds.get(i))) {
-                //TODO: erro ao adicionar metodo
+                error.complain("Erro ao adicionar metodo" + PrintUtil.typeId(extendedMtds.get(i).getNome(), extendedMtds.get(i).getTipo())
+                        + "vindo da classe " + extendedClass.getNome() + ": classe atual " + currentClass.getNome() + " possui o mesmo metodo" );
+
             }
         }
 
@@ -110,7 +118,9 @@ public class DepthFirstVisitor implements Visitor {
             n.vl.elementAt(i).accept(this);
             VarDecl currentVariable = n.vl.elementAt(i);
             if (!currentClass.addAtb(currentVariable.i.toString(), currentVariable.t.toString())) {
-                //TODO: erro ao adicionar atributo
+                error.complain("Erro ao adicionar o atributo " + PrintUtil.typeId(currentVariable.i.toString(), currentVariable.t.toString()) +
+                        "na classe " + currentClass.getNome());
+
             }
         }
 
@@ -129,7 +139,8 @@ public class DepthFirstVisitor implements Visitor {
                 tempMethod.addLocal(currentVariable.i.toString(), currentVariable.t.toString());
             }
             if (!currentClass.addMtd(tempMethod)) {
-                //TODO: erro ao adicionar metodo
+                error.complain("Erro ao adicionar o metodo " + PrintUtil.typeId(currentMethod.i.toString(), currentMethod.t.toString()) +
+                        "na classe " + currentClass.getNome());
             }
         }
         classList.put(Symbol.symbol(n.i.toString()), currentClass);

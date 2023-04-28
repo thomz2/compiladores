@@ -21,7 +21,7 @@ public class ClassTable extends Table {
 
     private ErrorMsg error;
 
-    public ClassTable(String nome, ClassTable pai){
+    public ClassTable(String nome, ClassTable pai) {
         this.nome = nome;
         snome = Symbol.symbol(nome);
         atributos = new ArrayList<Field>();
@@ -29,33 +29,29 @@ public class ClassTable extends Table {
         error = new ErrorMsg();
 
         // checar se a classe atual eh extendida
-        if (pai != null) {
-            ArrayList<Field> atbPai = pai.getAtributos();
-            ArrayList<MethodTable> metPai = pai.getMetodos();
-
-            for (int i = 0; i < atbPai.size(); ++i) {
-                String idAtual = atbPai.get(i).getPair().first.toString();
-                String tAtual = atbPai.get(i).getPair().second;
-                // adicionando e checando atributo
-                if (!addAtb(idAtual, tAtual)) {
-                    error.complain("Erro ao adicionar atributo" + PrintUtil.typeId(idAtual, tAtual) + "vindo da classe " + pai.getNome() + ": classe atual " + getNome() + " possui o mesmo atributo" );
-                }
-            }
-
-            for (int i = 0; i < metPai.size(); ++i) {
-                String idAtual = metPai.get(i).getPair().first.toString();
-                String tAtual = metPai.get(i).getPair().second;
-                // adicionando e checando metodo
-                if (!addMtd(idAtual, tAtual)) {
-                    error.complain("Erro ao adicionar metodo" + PrintUtil.typeId(idAtual, tAtual) + "vindo da classe " + pai.getNome() + ": classe atual " + getNome() + " possui o mesmo atributo");
-                }
-            }
-        }
-    }
-
-//    public ClassTable(String nome, ClassTable pai){
+//        if (pai != null) {
+//            ArrayList<Field> atbPai = pai.getAtributos();
+//            ArrayList<MethodTable> metPai = pai.getMetodos();
 //
-//    }
+//            for (int i = 0; i < atbPai.size(); ++i) {
+//                String idAtual = atbPai.get(i).getPair().first.toString();
+//                String tAtual = atbPai.get(i).getPair().second;
+//                // adicionando e checando atributo
+//                if (!addAtb(idAtual, tAtual)) {
+//                    error.complain("Erro ao adicionar atributo" + PrintUtil.typeId(idAtual, tAtual) + "vindo da classe " + pai.getNome() + ": classe atual " + getNome() + " possui o mesmo atributo" );
+//                }
+//            }
+//
+//            for (int i = 0; i < metPai.size(); ++i) {
+//                String idAtual = metPai.get(i).getPair().first.toString();
+//                String tAtual = metPai.get(i).getPair().second;
+//                // adicionando e checando metodo
+//                if (!addMtd(idAtual, tAtual)) {
+//                    error.complain("Erro ao adicionar metodo" + PrintUtil.typeId(idAtual, tAtual) + "vindo da classe " + pai.getNome() + ": classe atual " + getNome() + " possui o mesmo atributo");
+//                }
+//            }
+//        }
+    }
 
     public boolean addAtb(String id, String t) {
         for (int i = 0; i < atributos.size(); ++i) {
