@@ -6,15 +6,38 @@ import utils.ErrorMsg;
 import utils.Pair;
 import utils.PrintUtil;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
 
 public class DepthFirstVisitor implements Visitor {
 
     public ClassTable mainClass;
-    public Dictionary<Symbol, ClassTable> classList = new Hashtable<Symbol, ClassTable>();
+    public Hashtable<Symbol, ClassTable> classList = new Hashtable<Symbol, ClassTable>();
     private ErrorMsg error = new ErrorMsg();
+
+
+    public void printHierarchy() {
+        System.out.println("[Main] " + mainClass.getNome());
+
+        Iterator<Symbol> iterator = classList.keySet().iterator();
+        while (iterator.hasNext()) {
+            ClassTable currentClass = classList.get(iterator.next());
+            System.out.println("[Classe] " + currentClass.getNome());
+            //attrs
+            for (Field currentAtr : currentClass.getAtributos()) {
+                System.out.println("  L_[Atributo] " + currentAtr.getTipo() + " " + currentAtr.getNome());
+            }
+            for (MethodTable currentMtd : currentClass.getMetodos()) {
+                System.out.println("  L_[Método] " + currentMtd.getTipo() + " " + currentMtd.getNome());
+                for (Pair<Symbol,String> pairParam : currentMtd.getParametros()) {
+                    System.out.println("      L_[Parâmetro] " + pairParam.second + " " + pairParam.first);
+                }
+                for (Pair<Symbol,String> pairLocal : currentMtd.getVlocais()) {
+                    System.out.println("      L_[Var Local] " + pairLocal.second + " " + pairLocal.first);
+                }
+            }
+        }
+
+    }
 
     // MainClass m;
     // ClassDeclList cl;
@@ -23,6 +46,8 @@ public class DepthFirstVisitor implements Visitor {
         for ( int i = 0; i < n.cl.size(); i++ ) {
             n.cl.elementAt(i).accept(this);
         }
+
+        printHierarchy();
     }
 
     // Identifier i1,i2;
