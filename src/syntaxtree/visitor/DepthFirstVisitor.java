@@ -21,7 +21,7 @@ public class DepthFirstVisitor implements Visitor {
         Iterator<Symbol> iterator = classList.keySet().iterator();
         while (iterator.hasNext()) {
             ClassTable currentClass = classList.get(iterator.next());
-            System.out.println("[Classe] " + currentClass.getNome());
+            System.out.println("\n[Classe] " + currentClass.getNome());
             //attrs
             for (Field currentAtr : currentClass.getAtributos()) {
                 System.out.println("  L_[Atributo] " + currentAtr.getTipo() + " " + currentAtr.getNome());
@@ -75,7 +75,7 @@ public class DepthFirstVisitor implements Visitor {
             VarDecl currentVariable = n.vl.elementAt(i);
             if (!currentClass.addAtb(currentVariable.i.toString(), currentVariable.t.toString())) {
                 error.complain("Erro ao adicionar o atributo " + PrintUtil.typeId(currentVariable.i.toString(), currentVariable.t.toString()) +
-                        "na classe " + currentClass.getNome());
+                        " na classe " + currentClass.getNome());
             }
         }
 
@@ -95,7 +95,7 @@ public class DepthFirstVisitor implements Visitor {
             }
             if (!currentClass.addMtd(tempMethod)) {
                 error.complain("Erro ao adicionar o metodo " + PrintUtil.typeId(currentMethod.i.toString(), currentMethod.t.toString()) +
-                        "na classe " + currentClass.getNome());
+                        " na classe " + currentClass.getNome());
             }
         }
         classList.put(Symbol.symbol(n.i.toString()), currentClass);
@@ -132,8 +132,8 @@ public class DepthFirstVisitor implements Visitor {
         List<MethodTable> extendedMtds = extendedClass.getMetodos();
         for (int i = 0; i < extendedMtds.size(); i++ ) {
             if (!currentClass.addMtd(extendedMtds.get(i))) {
-                error.complain("Erro ao adicionar metodo" + PrintUtil.typeId(extendedMtds.get(i).getNome(), extendedMtds.get(i).getTipo())
-                        + "vindo da classe " + extendedClass.getNome() + ": classe atual " + currentClass.getNome() + " possui o mesmo metodo" );
+                error.complain("Erro ao adicionar metodo " + PrintUtil.typeId(extendedMtds.get(i).getNome(), extendedMtds.get(i).getTipo())
+                        + "vindo da classe " + extendedClass.getNome() + ": classe atual " + currentClass.getNome() + " possui o mesmo metodo " );
 
             }
         }
@@ -144,7 +144,7 @@ public class DepthFirstVisitor implements Visitor {
             VarDecl currentVariable = n.vl.elementAt(i);
             if (!currentClass.addAtb(currentVariable.i.toString(), currentVariable.t.toString())) {
                 error.complain("Erro ao adicionar o atributo " + PrintUtil.typeId(currentVariable.i.toString(), currentVariable.t.toString()) +
-                        "na classe " + currentClass.getNome());
+                        " na classe " + currentClass.getNome());
 
             }
         }
@@ -165,7 +165,7 @@ public class DepthFirstVisitor implements Visitor {
             }
             if (!currentClass.addMtd(tempMethod)) {
                 error.complain("Erro ao adicionar o metodo " + PrintUtil.typeId(currentMethod.i.toString(), currentMethod.t.toString()) +
-                        "na classe " + currentClass.getNome());
+                        " na classe " + currentClass.getNome());
             }
         }
         classList.put(Symbol.symbol(n.i.toString()), currentClass);

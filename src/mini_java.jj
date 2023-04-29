@@ -17,18 +17,18 @@ public class MyParser {
         ArrayList<String> filenames = new ArrayList<String>();
         filenames.add("./src/testes/teste.txt");
         filenames.add("./src/testes/Factorial.txt");
-//        filenames.add("./src/testes/TreeVisitor.txt");
-//        filenames.add("./src/testes/BinaryTree.txt");
-//        filenames.add("./src/testes/BubbleSort.txt");
-//        filenames.add("./src/testes/BynarySearch.txt");
-//        filenames.add("./src/testes/LinearSearch.txt");
-//        filenames.add("./src/testes/LinkedList.txt");
-//        filenames.add("./src/testes/QuickSort.txt");
+        filenames.add("./src/testes/TreeVisitor.txt");
+        filenames.add("./src/testes/BinaryTree.txt");
+        filenames.add("./src/testes/BubbleSort.txt");
+        filenames.add("./src/testes/BynarySearch.txt");
+        filenames.add("./src/testes/LinearSearch.txt");
+        filenames.add("./src/testes/LinkedList.txt");
+        filenames.add("./src/testes/QuickSort.txt");
 
-//        testaArquivos(filenames);
+//        testaArquivosAnaliseLexSint(filenames);
 
         try {
-            // soh da problema quando tento o arquivo de indice 1 (TreeVisitor.txt)
+            // soh da problema quando tento o arquivo de indice 2 (TreeVisitor.txt)
             Program raiz = new MyParser(new StringReader(readFile(filenames.get(0)))).Prog();
             raiz.accept(new DepthFirstVisitor());
         } catch (ParseException e) {
@@ -37,7 +37,7 @@ public class MyParser {
 
     }
 
-    private static void testaArquivos(ArrayList<String> filenames) throws Exception {
+    private static void testaArquivosAnaliseLexSint(ArrayList<String> filenames) throws Exception {
         MyParser parser = new MyParser(new StringReader(""));
         for (String nome : filenames) {
             try {

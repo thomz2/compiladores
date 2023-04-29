@@ -15,10 +15,5 @@ class Fac {
 	return num_aux ;
     }
 
-    public int ComputeFac(int num){
-    int num_second;
-    num_second = 2;
-    return num_second;
-    }
 
 }

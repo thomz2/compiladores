@@ -56,7 +56,7 @@ public class ClassTable extends Table {
     public boolean addAtb(String id, String t) {
         for (int i = 0; i < atributos.size(); ++i) {
             if (atributos.get(i).getPair().first.toString().equals(id)) {
-                error.complain("Classe " + getNome() + "ja tem o atributo" + PrintUtil.typeId(id, t) + ".");
+                error.complain("Classe " + getNome() + " ja tem o atributo " + PrintUtil.typeId(id, t) + ".");
                 return false;
             }
         }
@@ -66,9 +66,11 @@ public class ClassTable extends Table {
     }
 
     public boolean addAtb(Field atr) {
-        if (atributos.contains(atr)) {
-            error.complain("Classe " + getNome() + "ja tem o atributo" + PrintUtil.typeId(atr.getNome(), atr.getTipo()) + ".");
-            return false;
+        for (Field atr2 : getAtributos()) {
+            if (atr2.getNome().equals(atr.getNome())) {
+                error.complain("Classe " + getNome() + " ja tem o atributo " + PrintUtil.typeId(atr2.getNome(), atr2.getTipo()) + ".");
+                return false;
+            }
         }
 
         atributos.add(atr);
@@ -78,7 +80,7 @@ public class ClassTable extends Table {
     public boolean addMtd(String id, String t) {
         for (int i = 0; i < metodos.size(); ++i) {
             if (metodos.get(i).getPair().first.toString().equals(id)) {
-                error.complain("Classe " + getNome() + "ja tem o metodo" + PrintUtil.typeId(id, t) + ".");
+                error.complain("Classe " + getNome() + " ja tem o metodo " + PrintUtil.typeId(id, t) + ".");
                 return false;
             }
         }
@@ -88,9 +90,11 @@ public class ClassTable extends Table {
     }
 
     public boolean addMtd(MethodTable mtd) {
-        if (metodos.contains(mtd)) {
-            error.complain("Classe " + getNome() + "ja tem o metodo" +PrintUtil.typeId(mtd.getNome(), mtd.getTipo()) + ".");
-            return false;
+        for (MethodTable mtd2 : getMetodos()) {
+            if (mtd2.getNome().equals(mtd.getNome())) {
+                error.complain("Classe " + getNome() + " ja tem o metodo " + PrintUtil.typeId(mtd2.getNome(), mtd2.getTipo()) + ".");
+                return false;
+            }
         }
 
         metodos.add(mtd);
@@ -107,5 +111,14 @@ public class ClassTable extends Table {
 
     public ArrayList<MethodTable> getMetodos() {
         return metodos;
+    }
+
+    public boolean containsInMethods(String id) {
+        for (MethodTable mt : getMetodos()) {
+            if (mt.getNome().equals(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

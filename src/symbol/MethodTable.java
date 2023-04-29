@@ -48,4 +48,22 @@ public class MethodTable extends Field {
     public ArrayList<Pair<Symbol, String>> getVlocais() {
         return vlocais;
     }
+
+    public boolean containsInParams(String id) {
+        for (Pair<Symbol, String> obj : getParametros()) {
+            if (obj.first.toString().equals(id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean containsInLocals(String id) {
+        for (Pair<Symbol, String> obj : getVlocais()) {
+            if (obj.first.toString().equals(id)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
