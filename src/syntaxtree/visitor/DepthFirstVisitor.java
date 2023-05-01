@@ -28,11 +28,11 @@ public class DepthFirstVisitor implements Visitor {
             }
             for (MethodTable currentMtd : currentClass.getMetodos()) {
                 System.out.println("  L_[Método] " + currentMtd.getTipo() + " " + currentMtd.getNome());
-                for (Pair<Symbol,String> pairParam : currentMtd.getParametros()) {
-                    System.out.println("      L_[Parâmetro] " + pairParam.second + " " + pairParam.first);
+                for (Field param : currentMtd.getParametros()) {
+                    System.out.println("      L_[Parâmetro] " + param.getTipo() + " " + param.getNome());
                 }
-                for (Pair<Symbol,String> pairLocal : currentMtd.getVlocais()) {
-                    System.out.println("      L_[Var Local] " + pairLocal.second + " " + pairLocal.first);
+                for (Field local : currentMtd.getVlocais()) {
+                    System.out.println("      L_[Var Local] " + local.getTipo() + " " + local.getNome());
                 }
             }
         }

@@ -3,22 +3,21 @@ package symbol;
 import java.util.Hashtable;
 
 public class Table {
-    private Hashtable<Symbol, Object> inner_table;
 
-    public Table() {
-        inner_table = new Hashtable<Symbol, Object>();
-    }
+//    public static Hashtable<Symbol, String> inner_table = new Hashtable<Symbol, String>();
+
+    //symbol, type as string
+    public static Hashtable<Symbol, String> inner_table = new Hashtable<Symbol, String>();
 
     //Retorna o próprio objeto, pra concatenar function calls
     //table.put(a, b).put(c, d).put(e, f)...
-    public Table put(Symbol key, Object value){
+    public static void put(Symbol key, String value){
         inner_table.put(key, value);
-        return this;
     }
-    public Object get(Symbol key){
+    public static String get(Symbol key){
         return inner_table.get(key);
     }
-    public java.util.Enumeration keys(){
+    public static java.util.Enumeration keys(){
         return inner_table.keys();
     }
 }

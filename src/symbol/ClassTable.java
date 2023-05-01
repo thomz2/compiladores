@@ -51,6 +51,8 @@ public class ClassTable extends Table {
 //                }
 //            }
 //        }
+
+        Table.put(snome, nome);
     }
 
     public boolean addAtb(String id, String t) {

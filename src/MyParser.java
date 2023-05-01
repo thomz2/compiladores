@@ -27,8 +27,14 @@ public class MyParser implements MyParserConstants {
 
         try {
             // soh da problema quando tento o arquivo de indice 2 (TreeVisitor.txt)
-            Program raiz = new MyParser(new StringReader(readFile(filenames.get(3)))).Prog();
-            raiz.accept(new DepthFirstVisitor());
+            Program raiz = new MyParser(new StringReader(readFile(filenames.get(0)))).Prog();
+
+            DepthFirstVisitor visitorTabela = new DepthFirstVisitor();
+            raiz.accept(visitorTabela);
+
+            TypeDepthFirstVisitor visitorTipo = new TypeDepthFirstVisitor(visitorTabela);
+            raiz.accept(visitorTipo);
+
         } catch (ParseException e) {
             System.out.println(e.toString());
         }

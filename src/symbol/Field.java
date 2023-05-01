@@ -17,6 +17,8 @@ public class Field extends Table {
         nome = snome.toString();
         tipo = formal.second;
         error = new ErrorMsg();
+
+        Table.put(formal.first, formal.second);
     }
 
     public Pair<Symbol, String> getPair() {

@@ -1,8 +1,29 @@
 package syntaxtree.visitor;
 
+import symbol.ClassTable;
+import symbol.MethodTable;
+import symbol.Symbol;
+import symbol.Table;
 import syntaxtree.*;
+import utils.ErrorMsg;
+
+import java.util.Hashtable;
+import java.util.Iterator;
 
 public class TypeDepthFirstVisitor implements TypeVisitor {
+
+    private ErrorMsg error = new ErrorMsg();
+    public ClassTable mainClass;
+    public Hashtable<Symbol, ClassTable> classList;// = new Hashtable<Symbol, ClassTable>();
+
+
+
+    public ClassTable currentClass;
+
+    public TypeDepthFirstVisitor(DepthFirstVisitor v) {
+        mainClass = v.mainClass;
+        classList = v.classList;
+    }
 
     // MainClass m;
     // ClassDeclList cl;
@@ -17,6 +38,8 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
     // Identifier i1,i2;
     // Statement s;
     public Type visit(MainClass n) {
+        currentClass = mainClass;
+
         n.i1.accept(this);
         n.i2.accept(this);
         n.s.accept(this);
@@ -27,6 +50,8 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
     // VarDeclList vl;
     // MethodDeclList ml;
     public Type visit(ClassDeclSimple n) {
+        currentClass = classList.get(Symbol.symbol(n.i.s));
+
         n.i.accept(this);
         for ( int i = 0; i < n.vl.size(); i++ ) {
             n.vl.elementAt(i).accept(this);
@@ -42,6 +67,8 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
     // VarDeclList vl;
     // MethodDeclList ml;
     public Type visit(ClassDeclExtends n) {
+        currentClass = classList.get(Symbol.symbol(n.i.s));
+
         n.i.accept(this);
         n.j.accept(this);
         for ( int i = 0; i < n.vl.size(); i++ ) {
@@ -91,22 +118,7 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
         return null;
     }
 
-    public Type visit(IntArrayType n) {
-        return null;
-    }
 
-    public Type visit(BooleanType n) {
-        return null;
-    }
-
-    public Type visit(IntegerType n) {
-        return null;
-    }
-
-    // String s;
-    public Type visit(IdentifierType n) {
-        return null;
-    }
 
     // StatementList sl;
     public Type visit(Block n) {
@@ -119,7 +131,9 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
     // Exp e;
     // Statement s1,s2;
     public Type visit(If n) {
-        n.e.accept(this);
+        if (!( n.e.accept(this) instanceof BooleanType)) {
+            error.complain("Condição do 'If' deve ser de tipo 'boolean'.");
+        }
         n.s1.accept(this);
         n.s2.accept(this);
         return null;
@@ -128,135 +142,298 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
     // Exp e;
     // Statement s;
     public Type visit(While n) {
-        n.e.accept(this);
+        if (!( n.e.accept(this) instanceof BooleanType)) {
+            error.complain("Condição do 'While' deve ser de tipo 'boolean'.");
+        }
         n.s.accept(this);
         return null;
     }
 
     // Exp e;
     public Type visit(Print n) {
-        n.e.accept(this);
+        Type t = n.e.accept(this);
+        if (!(t instanceof IntegerType || t instanceof BooleanType || t instanceof IdentifierType)) {
+            error.complain("Print recebeu valor de tipo inválido: '"+ t.toString() +"'.");
+        }
         return null;
     }
 
     // Identifier i;
     // Exp e;
     public Type visit(Assign n) {
-        n.i.accept(this);
-        n.e.accept(this);
+        IdentifierType idType = (IdentifierType) n.i.accept(this); //erro de não existir vai aqui
+        Type expType = n.e.accept(this);
+
+        if (!(expType.toString().equals(Table.get(Symbol.symbol(idType.s))))) {
+            error.complain("Tipo da variável não é o mesmo tipo atribuído: variável '"+idType.s
+                    +"' de tipo '"+Table.get(Symbol.symbol(idType.s))+"' e expressão '"+expType.toString()+"'.");
+        }
+
         return null;
     }
 
     // Identifier i;
     // Exp e1,e2;
     public Type visit(ArrayAssign n) {
-        n.i.accept(this);
-        n.e1.accept(this);
-        n.e2.accept(this);
-        return null;
+        IdentifierType idType = (IdentifierType) n.i.accept(this); //erro de não existir vai aqui
+        if (!(Table.inner_table.get(Symbol.symbol(idType.s)).equals("int[]"))) {
+            error.complain("Identificador '"+ idType.s +"' deve ser do tipo 'int[]'.");
+        }
+
+        if(!(n.e1.accept(this) instanceof IntegerType)) {
+            error.complain("Posição de um array deve ser de tipo 'int'.");
+        } else if(!(n.e2.accept(this) instanceof IntegerType)) {
+            error.complain("Valor a inserir dentro do array deve ser de tipo 'int'.");
+        }
+
+        return null; //statements não tem tipo
     }
 
     // Exp e1,e2;
     public Type visit(And n) {
-        n.e1.accept(this);
-        n.e2.accept(this);
-        return null;
+        if(!(n.e1.accept(this) instanceof BooleanType)) {
+            error.complain("Valor à esquerda da operação '&&' deve ser de tipo 'boolean'.");
+        } else if(!(n.e2.accept(this) instanceof BooleanType)) {
+            error.complain("Valor à direita da operação '&&' deve ser de tipo 'boolean'.");
+        }
+        return new BooleanType();
     }
 
     // Exp e1,e2;
     public Type visit(LessThan n) {
-        n.e1.accept(this);
-        n.e2.accept(this);
-        return null;
+        if(!(n.e1.accept(this) instanceof IntegerType)) {
+            error.complain("Valor à esquerda da operação '*' deve ser de tipo 'int'.");
+        } else if(!(n.e2.accept(this) instanceof IntegerType)) {
+            error.complain("Valor à direita da operação '*' deve ser de tipo 'int'.");
+        }
+        return new BooleanType();
     }
 
     // Exp e1,e2;
     public Type visit(Plus n) {
-        n.e1.accept(this);
-        n.e2.accept(this);
-        return null;
+        if(!(n.e1.accept(this) instanceof IntegerType)) {
+            error.complain("Valor à esquerda da operação '+' deve ser de tipo 'int'.");
+        } else if(!(n.e2.accept(this) instanceof IntegerType)) {
+            error.complain("Valor à direita da operação '+' deve ser de tipo 'int'.");
+        }
+        return new IntegerType();
     }
 
     // Exp e1,e2;
     public Type visit(Minus n) {
-        n.e1.accept(this);
-        n.e2.accept(this);
-        return null;
+        if(!(n.e1.accept(this) instanceof IntegerType)) {
+            error.complain("Valor à esquerda da operação '-' deve ser de tipo 'int'.");
+        } else if(!(n.e2.accept(this) instanceof IntegerType)) {
+            error.complain("Valor à direita da operação '-' deve ser de tipo 'int'.");
+        }
+        return new IntegerType();
     }
 
     // Exp e1,e2;
     public Type visit(Times n) {
-        n.e1.accept(this);
-        n.e2.accept(this);
-        return null;
+        if(!(n.e1.accept(this) instanceof IntegerType)) {
+            error.complain("Valor à esquerda da operação '*' deve ser de tipo 'int'.");
+        } else if(!(n.e2.accept(this) instanceof IntegerType)) {
+            error.complain("Valor à direita da operação '*' deve ser de tipo 'int'.");
+        }
+        return new IntegerType();
     }
 
     // Exp e1,e2;
     public Type visit(ArrayLookup n) {
-        n.e1.accept(this);
-        n.e2.accept(this);
-        return null;
+
+        if(!(n.e1.accept(this) instanceof IdentifierType)) {
+            error.complain("Identificador não válido.");
+        } else if(!(n.e2.accept(this) instanceof IntegerType)) {
+            error.complain("Posição do array deve ser de tipo 'int'.");
+        }
+
+        return new IntegerType();
     }
 
     // Exp e;
     public Type visit(ArrayLength n) {
-        n.e.accept(this);
-        return null;
+        if(!(n.e.accept(this) instanceof IdentifierType)) {
+            error.complain("Identificador não válido.");
+        }
+        return new IntegerType();
     }
 
     // Exp e;
     // Identifier i;
     // ExpList el;
     public Type visit(Call n) {
-        n.e.accept(this);
-        n.i.accept(this);
-        for ( int i = 0; i < n.el.size(); i++ ) {
-            n.el.elementAt(i).accept(this);
+
+        if (!(n.e.accept(this) instanceof IdentifierType)) {
+            error.complain("A expressão não é um identificador");
         }
-        return null;
+        //se for um identificador não valido, o IdentifierExp vai mandar um erro
+        IdentifierType objIdType = (IdentifierType) n.e.accept(this);
+
+        //descobrir que classe pertence a expressão n.e
+        ClassTable objClassTable = null;
+        Iterator<Symbol> classIt = classList.keySet().iterator();
+        while (classIt.hasNext()) {
+            ClassTable c = classList.get(classIt.next());
+            if (c.getNome().equals(objIdType.toString())) {
+                objClassTable = c;
+                break;
+            }
+        }
+        if (objClassTable == null) {
+            error.complain("A classe de '" + objIdType.s + "' não foi declarada.");
+            return null;
+        }
+
+        //saber se n.i, o método, é um método válido da classe de n.e
+        MethodTable objMethodTable = null;
+        for (MethodTable m : objClassTable.getMetodos()) {
+            if (m.getNome().equals(n.i.s)) {
+                objMethodTable = m;
+                break;
+            }
+        }
+        if (objMethodTable == null) {
+            error.complain("O método '" + n.i.s + "' não existe na classe '" + objClassTable.getNome() + ".");
+            return null;
+        }
+
+        //TODO: testar os parametros
+        n.i.accept(this);
+        //avaliar se os parametros são válidos
+
+        if (n.el.size() != objMethodTable.getParametros().size()) {
+            error.complain("Quantidade incorreta de parâmetros; esperava-se " + n.el.size() +
+                    ", foram dados " +  objMethodTable.getParametros().size() + ".");
+        }
+
+        for ( int i = 0; i < n.el.size(); i++ ) {
+            Type paramType = n.el.elementAt(i).accept(this);
+            if (objMethodTable.getParametros().get(i).getTipo().equals(paramType.toString())) {
+                if (paramType instanceof IdentifierType) {
+                    //validado no visit(IdentifierExp)
+                }
+            } else {
+                error.complain("Parâmetro número '" + i + "' não é do tipo '" + objMethodTable.getParametros().get(i).getTipo() + "'." );
+            }
+        }
+
+        if (objMethodTable.getTipo().equals("int")) {
+            return new IntegerType();
+        } else if (objMethodTable.getTipo().equals("int[]")) {
+            return new IntArrayType();
+        } else if (objMethodTable.getTipo().equals("boolean")) {
+            return new BooleanType();
+        } else {
+            return new IdentifierType(objMethodTable.getTipo());
+        }
+
     }
 
     // int i;
     public Type visit(IntegerLiteral n) {
-        return null;
+        return new IntegerType();
     }
 
     public Type visit(True n) {
-        return null;
+        return new BooleanType();
     }
 
     public Type visit(False n) {
-        return null;
+        return new BooleanType();
     }
 
     // String s;
     public Type visit(IdentifierExp n) {
-        return null;
+
+        //se o identifier atual não foi declarado ainda
+        if (!(Table.inner_table.containsKey(Symbol.symbol(n.s)))) {
+            error.complain("Identificador '" + n.s + "' não foi declarado.");
+        }
+
+        String typeStr = Table.get(Symbol.symbol(n.s));
+        if (typeStr.equals("int[]")) {
+            return new IntArrayType();
+        }
+        else if (typeStr.equals("int")) {
+            return new IntegerType();
+        }
+        else if (typeStr.equals("boolean")) {
+            return new BooleanType();
+        }
+
+        return new IdentifierType(n.s);
     }
 
     public Type visit(This n) {
-        return null;
+        return new IdentifierType(currentClass.getNome());
     }
 
     // Exp e;
     public Type visit(NewArray n) {
-        n.e.accept(this);
-        return null;
+        if (!(n.e.accept(this) instanceof IntegerType)) {
+            error.complain("Expressão dentro do novo array deve ser de tipo 'int'.");
+        }
+        return new IntArrayType();
     }
 
     // Identifier i;
     public Type visit(NewObject n) {
-        return null;
+        Type objType = n.i.accept(this);
+
+        boolean classExists = false;
+        Iterator<Symbol> iterator = classList.keySet().iterator();
+        while (iterator.hasNext()) {
+            ClassTable iteratorClass = classList.get(iterator.next());
+            if (iteratorClass.getNome().equals(objType.toString())) {
+                classExists = true;
+                break;
+            }
+        }
+
+        if (!classExists) {
+            error.complain("Objeto não pôde ser criado pois a classe '" + objType.toString() + "' não foi declarada.");
+        }
+
+        if (!(objType instanceof IdentifierType)) {
+            error.complain("Identificador '" + objType.toString() + "' do objeto é inválido.");
+        }
+
+        return new IdentifierType(objType.toString());
     }
 
     // Exp e;
     public Type visit(Not n) {
-        n.e.accept(this);
-        return null;
+        if (!(n.e.accept(this) instanceof BooleanType)) {
+            error.complain("Expressão depois do 'Not' deve ser de tipo 'boolean'.");
+        }
+        return new BooleanType();
+    }
+
+
+    public Type visit(IntArrayType n) {
+        return new IntArrayType();
+    }
+
+    public Type visit(BooleanType n) {
+        return new BooleanType();
+    }
+
+    public Type visit(IntegerType n) {
+        return new IntegerType();
     }
 
     // String s;
+    public Type visit(IdentifierType n) {
+        return n;
+    }
+
+
+    // String s;
     public Type visit(Identifier n) {
-        return null;
+        if (!(Table.inner_table.containsKey(Symbol.symbol(n.s)))) {
+            error.complain("Identificador '" + n.s + "' não foi declarado.");
+        }
+        return new IdentifierType(n.s);
     }
 }

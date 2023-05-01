@@ -7,51 +7,53 @@ import java.util.ArrayList;
 
 public class MethodTable extends Field {
 
-    private ArrayList<Pair<Symbol, String>> parametros;
-    private ArrayList<Pair<Symbol, String>> vlocais;
+//    private ArrayList<Pair<Symbol, String>> parametros;
+    private ArrayList<Field> parametros;
+    private ArrayList<Field> vlocais;
 
     public MethodTable(Pair<Symbol, String> formal) {
         super(formal);
-        parametros = new ArrayList<Pair<Symbol, String>>();
-        vlocais    = new ArrayList<Pair<Symbol, String>>();
+        parametros = new ArrayList<Field>();
+        vlocais    = new ArrayList<Field>();
 
+        Table.put(formal.first, formal.second);
     }
 
     public boolean addParam(String id, String t) {
         for (int i = 0; i < parametros.size(); ++i) {
-            if (parametros.get(i).first.toString().equals(id)) {
+            if (parametros.get(i).getNome().equals(id)) {
                 error.complain("Erro ao adicionar parametro" + PrintUtil.typeId(id, t) + "no metodo" + PrintUtil.typeId(getNome(), getTipo()) + ".");
                 return false;
             }
         }
 
-        parametros.add(Pair.of(Symbol.symbol(id), t));
+        parametros.add(new Field(Pair.of(Symbol.symbol(id), t)));
         return true;
     }
 
     public boolean addLocal(String id, String t) {
         for (int i = 0; i < vlocais.size(); ++i) {
-            if (vlocais.get(i).first.toString().equals(id)) {
+            if (vlocais.get(i).getNome().equals(id)) {
                 error.complain("Erro ao adicionar variavel local" + PrintUtil.typeId(id, t) + "no metodo" + PrintUtil.typeId(getNome(), getTipo()) + ".");
                 return false;
             }
         }
 
-        vlocais.add(Pair.of(Symbol.symbol(id), t));
+        vlocais.add(new Field(Pair.of(Symbol.symbol(id), t)));
         return true;
     }
 
-    public ArrayList<Pair<Symbol, String>> getParametros() {
+    public ArrayList<Field> getParametros() {
         return parametros;
     }
 
-    public ArrayList<Pair<Symbol, String>> getVlocais() {
+    public ArrayList<Field> getVlocais() {
         return vlocais;
     }
 
     public boolean containsInParams(String id) {
-        for (Pair<Symbol, String> obj : getParametros()) {
-            if (obj.first.toString().equals(id)) {
+        for (Field obj : getParametros()) {
+            if (obj.getNome().equals(id)) {
                 return true;
             }
         }
@@ -59,8 +61,8 @@ public class MethodTable extends Field {
     }
 
     public boolean containsInLocals(String id) {
-        for (Pair<Symbol, String> obj : getVlocais()) {
-            if (obj.first.toString().equals(id)) {
+        for (Field obj : getVlocais()) {
+            if (obj.getNome().equals(id)) {
                 return true;
             }
         }
