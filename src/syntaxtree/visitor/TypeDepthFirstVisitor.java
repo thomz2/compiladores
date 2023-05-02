@@ -152,9 +152,10 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
     // Exp e;
     public Type visit(Print n) {
         Type t = n.e.accept(this);
-        if (!(t instanceof IntegerType || t instanceof BooleanType || t instanceof IdentifierType)) {
-            error.complain("Print recebeu valor de tipo inválido: '"+ t.toString() +"'.");
-        }
+        if (!error.anyErrors) // TODO: ver se isso aqui eh encaixavel, colocando apenas para evitar erro do java
+            if (!(t instanceof IntegerType || t instanceof BooleanType || t instanceof IdentifierType)) {
+                error.complain("Print recebeu valor de tipo inválido: '"+ t.toString() +"'.");
+            }
         return null;
     }
 
@@ -305,17 +306,29 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
         if (n.el.size() != objMethodTable.getParametros().size()) {
             error.complain("Quantidade incorreta de parâmetros; esperava-se " + n.el.size() +
                     ", foram dados " +  objMethodTable.getParametros().size() + ".");
+            // return null; // ver se eh necessario esse null
         }
+
 
         for ( int i = 0; i < n.el.size(); i++ ) {
             Type paramType = n.el.elementAt(i).accept(this);
-            if (objMethodTable.getParametros().get(i).getTipo().equals(paramType.toString())) {
-                if (paramType instanceof IdentifierType) {
-                    //validado no visit(IdentifierExp)
-                }
-            } else {
-                error.complain("Parâmetro número '" + i + "' não é do tipo '" + objMethodTable.getParametros().get(i).getTipo() + "'." );
+            String tipoPAtual = "";
+            if (i < objMethodTable.getParametros().size()) {
+                // testar se o parametro atual ta dentro da lista de parametros da declaracao do metodo
+                tipoPAtual = objMethodTable.getParametros().get(i).getTipo();
             }
+            // apontando dois erros ao mesmo tempo
+            if (!tipoPAtual.equals(paramType.toString()) && tipoPAtual != "") {
+                error.complain("Parâmetro número '" + i + "' não é do tipo '" + tipoPAtual + "'." );
+
+            }
+
+            //TODO: ver se isso aqui eh necessario
+//            else {
+//                if (paramType instanceof IdentifierType) {
+//                    //validado no visit(IdentifierExp)
+//                }
+//            }
         }
 
         if (objMethodTable.getTipo().equals("int")) {

@@ -1,7 +1,7 @@
 package utils;
 
 public class ErrorMsg {
-    boolean anyErrors;
+    public boolean anyErrors;
     private String msg;
 
     public void complain(String msg) {
