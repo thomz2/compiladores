@@ -304,8 +304,8 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
         //avaliar se os parametros são válidos
 
         if (n.el.size() != objMethodTable.getParametros().size()) {
-            error.complain("Quantidade incorreta de parâmetros; esperava-se " + n.el.size() +
-                    ", foram dados " +  objMethodTable.getParametros().size() + ".");
+            error.complain("Quantidade incorreta de parâmetros; foram dados " + n.el.size() +
+                    ", esperava-se " +  objMethodTable.getParametros().size() + ".");
             // return null; // ver se eh necessario esse null
         }
 
