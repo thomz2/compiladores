@@ -240,12 +240,16 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
         return new IntegerType();
     }
 
+    //TODO: erro onde nao era pra ter erro onde tem "Identificador não válido."
+
     // Exp e1,e2;
     public Type visit(ArrayLookup n) {
 
         if(!(n.e1.accept(this) instanceof IdentifierType)) {
-            error.complain("Identificador não válido.");
-        } else if(!(n.e2.accept(this) instanceof IntegerType)) {
+            error.complain("Identificador não válido (ArrayLookup).");
+        }
+
+        if(!(n.e2.accept(this) instanceof IntegerType)) {
             error.complain("Posição do array deve ser de tipo 'int'.");
         }
 
@@ -255,7 +259,7 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
     // Exp e;
     public Type visit(ArrayLength n) {
         if(!(n.e.accept(this) instanceof IdentifierType)) {
-            error.complain("Identificador não válido.");
+            error.complain("Identificador não (ArrayLength).");
         }
         return new IntegerType();
     }
@@ -270,17 +274,23 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
         }
         //se for um identificador não valido, o IdentifierExp vai mandar um erro
         IdentifierType objIdType = (IdentifierType) n.e.accept(this);
+        System.out.println("DEBUG: " + objIdType.toString());
 
         //descobrir que classe pertence a expressão n.e
         ClassTable objClassTable = null;
         Iterator<Symbol> classIt = classList.keySet().iterator();
+        System.out.println("\nDEBUG");
         while (classIt.hasNext()) {
             ClassTable c = classList.get(classIt.next());
+            System.out.println(c.getNome());
             if (c.getNome().equals(objIdType.toString())) {
                 objClassTable = c;
+                System.out.println("ESCOLHIDO: " + c.getNome());
                 break;
             }
         }
+
+        // TODO: erro de não perceber a classe
         if (objClassTable == null) {
             error.complain("A classe de '" + objIdType.s + "' não foi declarada.");
             return null;

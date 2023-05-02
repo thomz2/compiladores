@@ -1,21 +1,29 @@
 class Factorial {
     public static void main(String[] a){
 
-	System.out.println(new Fac().ComputeFac(true, 10));
+	    System.out.println(new Fac().met1(10));
     }
 }
 
-/*
+
 class Teste {
-    boolean num_aux ;
 
-    public int ComputeFac(int num){
-        return 2 ;
+    int[] numeros ;
+
+    public int met1(int num){
+        numeros = new int[3] ;
+
+        numeros[0] = num ;
+
+	    //System.out.println(numeros[0]);
+
+        return 0;
+        // return numeros[0] ;
     }
 }
-*/
 
-class Fac { // extends Teste {
+
+class Fac extends Teste {
 
     public int ComputeFac(int num){
 	int num_aux ;
