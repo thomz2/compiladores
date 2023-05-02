@@ -54,10 +54,11 @@ public class DepthFirstVisitor implements Visitor {
     // Statement s;
     public void visit(MainClass n) {
         n.i1.accept(this);
-        n.i2.accept(this);
+        n.i2.accept(this); // id do string[]
         n.s.accept(this);
 
         mainClass = new ClassTable(n.i1.toString(), null);
+        mainClass.mainArgs.add(n.i2.s);
     }
 
     // Identifier i;

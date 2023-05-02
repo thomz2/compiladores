@@ -431,7 +431,8 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
 
     // String s;
     public Type visit(Identifier n) {
-        if (!(Table.inner_table.containsKey(Symbol.symbol(n.s)))) {
+        // erro tirado por gambiarra
+        if (!(Table.inner_table.containsKey(Symbol.symbol(n.s))) && !mainClass.mainArgs.get(0).equals(n.s) ) {
             error.complain("Identificador '" + n.s + "' não foi declarado.");
         }
         return new IdentifierType(n.s);

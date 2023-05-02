@@ -21,12 +21,15 @@ public class ClassTable extends Table {
 
     private ErrorMsg error;
 
+    public ArrayList<String> mainArgs;
+
     public ClassTable(String nome, ClassTable pai) {
         this.nome = nome;
         snome = Symbol.symbol(nome);
         atributos = new ArrayList<Field>();
         metodos = new ArrayList<MethodTable>();
         error = new ErrorMsg();
+        mainArgs = new ArrayList<String>();
 
         // checar se a classe atual eh extendida
 //        if (pai != null) {
