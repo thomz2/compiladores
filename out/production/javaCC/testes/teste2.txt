@@ -1,0 +1,26 @@
+class Simples {
+    public static void main(String[] a){
+        System.out.println(1<2);
+        //teste alooo
+    }
+}
+
+class Test {
+    int[] n;
+    int x;
+    boolean m;
+
+    public int f(){
+        x = m;
+        n[0] = 10;
+        return n.length;
+    }
+}
+
+class Run {
+    Test t;
+    public int r(){
+        t = new Test();
+        return 10;
+    }
+}
