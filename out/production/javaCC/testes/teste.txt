@@ -15,9 +15,10 @@ class Teste {
 
         numeros[0] = num ;
 
-	    //System.out.println(numeros[0]);
+	    System.out.println(numeros[0]);
 
         return 0;
+
         // return numeros[0] ;
     }
 }

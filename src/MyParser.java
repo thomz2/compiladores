@@ -13,7 +13,8 @@ public class MyParser implements MyParserConstants {
     public static void main(String[] args) throws Exception, ParseException, TokenMgrError{
 
         ArrayList<String> filenames = new ArrayList<String>();
-        filenames.add("./src/testes/teste.txt");
+//        filenames.add("./src/testes/teste.txt");
+        filenames.add("./src/testes/teste2.txt");
         filenames.add("./src/testes/Factorial.txt");
         filenames.add("./src/testes/TreeVisitor.txt");
         filenames.add("./src/testes/BinaryTree.txt");
@@ -30,7 +31,7 @@ public class MyParser implements MyParserConstants {
             // programas com conflito: 3, 4, 5, 6, 7, 8
             // 3 e 7 falando que não foi declarada classe
             // 4, 5, 6, 7, 8 falando sobre identificador nao valido
-            Program raiz = new MyParser(new StringReader(readFile(filenames.get(3)))).Prog();
+            Program raiz = new MyParser(new StringReader(readFile(filenames.get(0)))).Prog();
 
             DepthFirstVisitor visitorTabela = new DepthFirstVisitor();
             raiz.accept(visitorTabela);

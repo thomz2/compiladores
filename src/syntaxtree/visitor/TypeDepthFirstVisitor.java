@@ -1,11 +1,9 @@
 package syntaxtree.visitor;
 
-import symbol.ClassTable;
-import symbol.MethodTable;
-import symbol.Symbol;
-import symbol.Table;
+import symbol.*;
 import syntaxtree.*;
 import utils.ErrorMsg;
+import utils.Pair;
 
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -19,6 +17,7 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
 
 
     public ClassTable currentClass;
+    public MethodTable currentMethod;
 
     public TypeDepthFirstVisitor(DepthFirstVisitor v) {
         mainClass = v.mainClass;
@@ -53,12 +52,17 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
         currentClass = classList.get(Symbol.symbol(n.i.s));
 
         n.i.accept(this);
+
         for ( int i = 0; i < n.vl.size(); i++ ) {
             n.vl.elementAt(i).accept(this);
         }
         for ( int i = 0; i < n.ml.size(); i++ ) {
+            currentMethod = currentClass.getMetodos().get(i);
+//            System.out.println("METODO ATUAL: " +  currentMethod.getNome());
             n.ml.elementAt(i).accept(this);
+            currentMethod = null;
         }
+        currentClass = null;
         return null;
     }
 
@@ -75,8 +79,12 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
             n.vl.elementAt(i).accept(this);
         }
         for ( int i = 0; i < n.ml.size(); i++ ) {
+            currentMethod = currentClass.getMetodos().get(i);
+//            System.out.println("METODO ATUAL: " +  currentMethod.getNome());
             n.ml.elementAt(i).accept(this);
+            currentMethod = null;
         }
+        currentClass = null;
         return null;
     }
 
@@ -95,6 +103,7 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
     // StatementList sl;
     // Exp e;
     public Type visit(MethodDecl n) {
+
         n.t.accept(this);
         n.i.accept(this);
         for ( int i = 0; i < n.fl.size(); i++ ) {
@@ -162,23 +171,37 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
     // Identifier i;
     // Exp e;
     public Type visit(Assign n) {
-        IdentifierType idType = (IdentifierType) n.i.accept(this); //erro de não existir vai aqui
+        Type idType  = n.i.accept(this); //erro de não existir vai aqui
         Type expType = n.e.accept(this);
+        String nomeId = n.i.s;
 
-        if (!(expType.toString().equals(Table.get(Symbol.symbol(idType.s))))) {
-            error.complain("Tipo da variável não é o mesmo tipo atribuído: variável '"+idType.s
-                    +"' de tipo '"+Table.get(Symbol.symbol(idType.s))+"' e expressão '"+expType.toString()+"'.");
+        try {
+            if (!(expType.toString().equals(idType.toString()))) {
+//            if (!(expType.toString().equals(Table.get(Symbol.symbol(nomeId)))) ) {
+                error.complain("Tipo da variável não é o mesmo tipo atribuído: variável '"+ nomeId
+                        +"' de tipo '"+ idType.toString() + "' e expressão '"+expType.toString()+"'.");
+            }
+
+        } catch (Exception e) {
+            System.out.println(" NOME IDDDDDD: " + nomeId);
         }
 
         return null;
     }
 
+    // TODO: ver erro daqui (acho que agora ta certo)
     // Identifier i;
     // Exp e1,e2;
     public Type visit(ArrayAssign n) {
-        IdentifierType idType = (IdentifierType) n.i.accept(this); //erro de não existir vai aqui
-        if (!(Table.inner_table.get(Symbol.symbol(idType.s)).equals("int[]"))) {
-            error.complain("Identificador '"+ idType.s +"' deve ser do tipo 'int[]'.");
+        Type idType = n.i.accept(this); //erro de não existir vai aqui
+        String nomeId = n.i.s;
+
+//        if (idType.toString() == null) {
+//            error.complain(idType.toString() + "nao existe.");
+//            return null;
+//        }
+        if (!idType.toString().equals("int[]")) {
+            error.complain("Identificador '"+ idType.toString() +"' deve ser do tipo 'int[]'.");
         }
 
         if(!(n.e1.accept(this) instanceof IntegerType)) {
@@ -240,26 +263,35 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
         return new IntegerType();
     }
 
-    //TODO: erro onde nao era pra ter erro onde tem "Identificador não válido."
-
+    // OK
     // Exp e1,e2;
     public Type visit(ArrayLookup n) {
 
-        if(!(n.e1.accept(this) instanceof IdentifierType)) {
-            error.complain("Identificador não válido (ArrayLookup).");
+        Type tipo1 = n.e1.accept(this); // int[] ...
+        Type tipo2 = n.e2.accept(this);
+
+
+        // FUNCIONANDO
+        if(!(tipo1 instanceof IntArrayType)) {
+            error.complain("Identificador não válido (ArrayLookup): " + tipo1.toString() +  ".");
         }
 
-        if(!(n.e2.accept(this) instanceof IntegerType)) {
+        // FUNCIONANDO
+        if(!(tipo2 instanceof IntegerType)) {
             error.complain("Posição do array deve ser de tipo 'int'.");
         }
 
         return new IntegerType();
     }
 
+    // OK
     // Exp e;
     public Type visit(ArrayLength n) {
-        if(!(n.e.accept(this) instanceof IdentifierType)) {
-            error.complain("Identificador não (ArrayLength).");
+
+        Type tipo = n.e.accept(this);
+
+        if(!(tipo instanceof IntArrayType)) {
+            error.complain("Identificador não válido (ArrayLength): " + tipo.toString() + ".");
         }
         return new IntegerType();
     }
@@ -268,31 +300,38 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
     // Identifier i;
     // ExpList el;
     public Type visit(Call n) {
+        // Expression "." Identifier "(" ( Expression ( "," Expression )* )? ")"
+
+//        System.out.println("PRINT NOVO: " + n.e.getClass());
 
         if (!(n.e.accept(this) instanceof IdentifierType)) {
             error.complain("A expressão não é um identificador");
         }
+
+        // TODO: AJEITAR ISSO AQUI AAA
         //se for um identificador não valido, o IdentifierExp vai mandar um erro
-        IdentifierType objIdType = (IdentifierType) n.e.accept(this);
-        System.out.println("DEBUG: " + objIdType.toString());
+        Type objIdType = n.e.accept(this);
+//        System.out.println("DEBUG: " + objIdType.toString());
+
 
         //descobrir que classe pertence a expressão n.e
-        ClassTable objClassTable = null;
-        Iterator<Symbol> classIt = classList.keySet().iterator();
-        System.out.println("\nDEBUG");
-        while (classIt.hasNext()) {
-            ClassTable c = classList.get(classIt.next());
-            System.out.println(c.getNome());
-            if (c.getNome().equals(objIdType.toString())) {
-                objClassTable = c;
-                System.out.println("ESCOLHIDO: " + c.getNome());
-                break;
-            }
-        }
+        ClassTable objClassTable = classList.get(Symbol.symbol(objIdType.toString()));
+//        System.out.println("PRINT NOVO 2: " + objClassTable.getNome());
+//        Iterator<Symbol> classIt = classList.keySet().iterator();
+//        System.out.println("\nDEBUG");
+//        while (classIt.hasNext()) {
+//            ClassTable c = classList.get(classIt.next());
+//            System.out.println(c.getNome());
+//            if (c.getNome().equals(objIdType.toString())) {
+//                objClassTable = c;
+//                System.out.println("ESCOLHIDO: " + c.getNome());
+//                break;
+//            }
+//        }
 
         // TODO: erro de não perceber a classe
         if (objClassTable == null) {
-            error.complain("A classe de '" + objIdType.s + "' não foi declarada.");
+            error.complain("A classe de '" + objIdType.toString() + "' não foi declarada.");
             return null;
         }
 
@@ -309,8 +348,8 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
             return null;
         }
 
-        //TODO: testar os parametros
-        n.i.accept(this);
+        //TODO: VER SE EH PRA COMENTAR ISSO MESMO
+//        n.i.accept(this);
         //avaliar se os parametros são válidos
 
         if (n.el.size() != objMethodTable.getParametros().size()) {
@@ -323,6 +362,7 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
         for ( int i = 0; i < n.el.size(); i++ ) {
             Type paramType = n.el.elementAt(i).accept(this);
             String tipoPAtual = "";
+//            System.out.println("PARAMTYPE: " + paramType.toString());
             if (i < objMethodTable.getParametros().size()) {
                 // testar se o parametro atual ta dentro da lista de parametros da declaracao do metodo
                 tipoPAtual = objMethodTable.getParametros().get(i).getTipo();
@@ -353,41 +393,50 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
 
     }
 
+    // OK
     // int i;
     public Type visit(IntegerLiteral n) {
         return new IntegerType();
     }
 
+    // OK
     public Type visit(True n) {
         return new BooleanType();
     }
 
+    // OK
     public Type visit(False n) {
         return new BooleanType();
     }
 
+    // OK
     // String s;
     public Type visit(IdentifierExp n) {
 
+        // TODO: ver depois se da erro
+        Identifier iaux = new Identifier(n.s);
+        return iaux.accept(this);
+
         //se o identifier atual não foi declarado ainda
-        if (!(Table.inner_table.containsKey(Symbol.symbol(n.s)))) {
-            error.complain("Identificador '" + n.s + "' não foi declarado.");
-        }
-
-        String typeStr = Table.get(Symbol.symbol(n.s));
-        if (typeStr.equals("int[]")) {
-            return new IntArrayType();
-        }
-        else if (typeStr.equals("int")) {
-            return new IntegerType();
-        }
-        else if (typeStr.equals("boolean")) {
-            return new BooleanType();
-        }
-
-        return new IdentifierType(n.s);
+//        if (!(Table.inner_table.containsKey(Symbol.symbol(n.s)))) {
+//            error.complain("Identificador '" + n.s + "' não foi declarado.");
+//        }
+//
+//        String typeStr = n.s;
+//        if (typeStr.equals("int[]")) {
+//            return new IntArrayType();
+//        }
+//        else if (typeStr.equals("int")) {
+//            return new IntegerType();
+//        }
+//        else if (typeStr.equals("boolean")) {
+//            return new BooleanType();
+//        }
+//
+//        return new IdentifierType(typeStr);
     }
 
+    // OK
     public Type visit(This n) {
         return new IdentifierType(currentClass.getNome());
     }
@@ -451,13 +500,117 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
         return n;
     }
 
-
+    // OK
     // String s;
     public Type visit(Identifier n) {
-        // erro tirado por gambiarra
-        if (!(Table.inner_table.containsKey(Symbol.symbol(n.s))) && !mainClass.mainArgs.get(0).equals(n.s) ) {
-            error.complain("Identificador '" + n.s + "' não foi declarado.");
+
+        String id = n.s;
+
+        // ignorando String[] x
+//        if (!(Table.inner_table.containsKey(Symbol.symbol(n.s))) && !mainClass.mainArgs.get(0).equals(n.s) ) {
+//            error.complain("Identificador '" + n.s + "' não foi declarado.");
+//        }
+
+        // vendo se o id eh o da String[] x
+        if (mainClass.mainArgs.get(0).equals(n.s)) {
+            return null; // parametro da main
         }
-        return new IdentifierType(n.s);
+
+        // op ternaria para o retorno do tipo
+//        return Table.inner_table.get(Symbol.symbol(n.s)).equals("int[]") ? new IntArrayType() :
+//                Table.inner_table.get(Symbol.symbol(n.s)).equals("int") ? new IntegerType() :
+//                        Table.inner_table.get(Symbol.symbol(n.s)).equals("boolean") ? new BooleanType() :
+//                                new IdentifierType(n.s);
+
+        Field field = null;
+
+//        System.out.println("\n");
+//        if (currentClass != null) {
+//            System.out.println("CLASSE ATUAL: " + currentClass.getNome());
+//        } else {
+//            System.out.println("CLASSE ATUAL NULA ");
+//        }
+//
+//        if (currentMethod != null) {
+//            System.out.println("METODO ATUAL: " + currentMethod.getNome());
+//        } else {
+//            System.out.println("METODO ATUAL NULA ");
+//        }
+
+        if (currentMethod != null && currentMethod.containsInParams(id)) {
+            for (int i = 0; i < currentMethod.getParametros().size(); ++i) {
+                if (id.equals(currentMethod.getParametros().get(i).getNome())) {
+                    field = currentMethod.getParametros().get(i);
+                    break;
+                }
+            }
+        } else if (currentMethod != null && currentMethod.containsInLocals(id)) {
+            for (int i = 0; i < currentMethod.getVlocais().size(); ++i) {
+                if (id.equals(currentMethod.getVlocais().get(i).getNome())) {
+                    field = currentMethod.getVlocais().get(i);
+                    break;
+                }
+            }
+        } else {
+            boolean achouAtributo = false;
+            boolean achouClasse = false;
+
+            if (currentClass != null) {
+                for (int i = 0; i < currentClass.getAtributos().size(); ++i) {
+                    if (id.equals(currentClass.getAtributos().get(i).getNome())) {
+                        field = currentClass.getAtributos().get(i);
+                        achouAtributo = true;
+                        break;
+                    }
+                }
+
+                // testando metodo
+                if (!achouAtributo) {
+                    for (int i = 0; i < currentClass.getMetodos().size(); ++i) {
+                        if (id.equals(currentClass.getMetodos().get(i).getNome())) {
+                            field = currentClass.getMetodos().get(i);
+                            achouAtributo = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+
+            if (!achouAtributo) {
+
+                if (mainClass.getNome().equals(id)) {
+
+                    field = new Field(Pair.of(Symbol.symbol(id), id));
+                    achouClasse = true;
+
+                } else {
+                    Iterator<Symbol> classIt = classList.keySet().iterator();
+                    while (classIt.hasNext()) {
+                        ClassTable iteratorClass = classList.get(classIt.next());
+//                        System.out.println(iteratorClass.getNome() + " = " + id);
+                        if (iteratorClass.getNome().equals(id)) {
+                            field = new Field(Pair.of(Symbol.symbol(id), id));
+                            achouClasse = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!achouClasse) {
+                    error.complain("Identificador '" + n.s + "' não foi declarado no escopo");
+                    return new IdentifierType(n.s);
+                }
+
+
+            }
+        }
+
+
+        return field.getTipo().equals("int[]") ? new IntArrayType() :
+                field.getTipo().equals("int") ? new IntegerType() :
+                field.getTipo().equals("boolean") ? new BooleanType() :
+                new IdentifierType(field.getTipo());
+
     }
 }
