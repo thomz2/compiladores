@@ -111,33 +111,36 @@ public class DepthFirstVisitor implements Visitor {
         ClassTable currentClass = new ClassTable(n.i.toString(), null);
         ClassTable extendedClass = classList.get(Symbol.symbol(n.j.toString()));
         if (extendedClass != null) {
+
             currentClass = new ClassTable(n.i.toString(), extendedClass);
+
+            //adicionar variaveis e metodos da classe herdada
+            List<Field> extendedAtrs = extendedClass.getAtributos();
+            for (int i = 0; i < extendedAtrs.size(); i++ ) {
+                if (!currentClass.addAtb(extendedAtrs.get(i))) {
+                    error.complain("Erro ao adicionar atributo" + PrintUtil.typeId(extendedAtrs.get(i).getNome(), extendedAtrs.get(i).getTipo())
+                            + "vindo da classe " + extendedClass.getNome() + ": classe atual " + currentClass.getNome() + " possui o mesmo atributo" );
+
+                }
+            }
+            List<MethodTable> extendedMtds = extendedClass.getMetodos();
+            for (int i = 0; i < extendedMtds.size(); i++ ) {
+                if (!currentClass.addMtd(extendedMtds.get(i))) {
+                    error.complain("Erro ao adicionar metodo " + PrintUtil.typeId(extendedMtds.get(i).getNome(), extendedMtds.get(i).getTipo())
+                            + "vindo da classe " + extendedClass.getNome() + ": classe atual " + currentClass.getNome() + " possui o mesmo metodo " );
+
+                }
+            }
+
         } else {
-            error.complain("Erro: classe herdada " + extendedClass.getNome() + " por " + currentClass.getNome() + " é inválida/não existe");
+            error.complain("Erro: classe herdada " + n.j.s + " por " + currentClass.getNome() + " é inválida/não existe");
+
         }
 
         MethodTable tempMethod;
 
         n.i.accept(this);
         n.j.accept(this);
-
-        //adicionar variaveis e metodos da classe herdada
-        List<Field> extendedAtrs = extendedClass.getAtributos();
-        for (int i = 0; i < extendedAtrs.size(); i++ ) {
-            if (!currentClass.addAtb(extendedAtrs.get(i))) {
-                error.complain("Erro ao adicionar atributo" + PrintUtil.typeId(extendedAtrs.get(i).getNome(), extendedAtrs.get(i).getTipo())
-                        + "vindo da classe " + extendedClass.getNome() + ": classe atual " + currentClass.getNome() + " possui o mesmo atributo" );
-
-            }
-        }
-        List<MethodTable> extendedMtds = extendedClass.getMetodos();
-        for (int i = 0; i < extendedMtds.size(); i++ ) {
-            if (!currentClass.addMtd(extendedMtds.get(i))) {
-                error.complain("Erro ao adicionar metodo " + PrintUtil.typeId(extendedMtds.get(i).getNome(), extendedMtds.get(i).getTipo())
-                        + "vindo da classe " + extendedClass.getNome() + ": classe atual " + currentClass.getNome() + " possui o mesmo metodo " );
-
-            }
-        }
 
         //adiciona as variaveis da classe
         for ( int i = 0; i < n.vl.size(); i++ ) {

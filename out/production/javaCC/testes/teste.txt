@@ -1,10 +1,9 @@
 class Factorial {
     public static void main(String[] a){
 
-	    System.out.println(new Fac().met1(10));
+	    System.out.println(new Fac().ComputeFac(10));
     }
 }
-
 
 class Teste {
 
@@ -22,7 +21,6 @@ class Teste {
         // return numeros[0] ;
     }
 }
-
 
 class Fac extends Teste {
 

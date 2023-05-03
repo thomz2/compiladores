@@ -524,18 +524,18 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
 
         Field field = null;
 
-//        System.out.println("\n");
-//        if (currentClass != null) {
-//            System.out.println("CLASSE ATUAL: " + currentClass.getNome());
-//        } else {
-//            System.out.println("CLASSE ATUAL NULA ");
-//        }
-//
-//        if (currentMethod != null) {
-//            System.out.println("METODO ATUAL: " + currentMethod.getNome());
-//        } else {
-//            System.out.println("METODO ATUAL NULA ");
-//        }
+        System.out.println("\n");
+        if (currentClass != null) {
+            System.out.println("CLASSE ATUAL: " + currentClass.getNome());
+        } else {
+            System.out.println("CLASSE ATUAL NULA ");
+        }
+
+        if (currentMethod != null) {
+            System.out.println("METODO ATUAL: " + currentMethod.getNome());
+        } else {
+            System.out.println("METODO ATUAL NULA ");
+        }
 
         if (currentMethod != null && currentMethod.containsInParams(id)) {
             for (int i = 0; i < currentMethod.getParametros().size(); ++i) {
@@ -546,6 +546,7 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
             }
         } else if (currentMethod != null && currentMethod.containsInLocals(id)) {
             for (int i = 0; i < currentMethod.getVlocais().size(); ++i) {
+                System.out.println("METODO: " + currentMethod.getNome() + " VARLOCAL: " + currentMethod.getVlocais().get(i) );
                 if (id.equals(currentMethod.getVlocais().get(i).getNome())) {
                     field = currentMethod.getVlocais().get(i);
                     break;

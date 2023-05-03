@@ -13,7 +13,7 @@ public class MyParser implements MyParserConstants {
     public static void main(String[] args) throws Exception, ParseException, TokenMgrError{
 
         ArrayList<String> filenames = new ArrayList<String>();
-//        filenames.add("./src/testes/teste.txt");
+        filenames.add("./src/testes/teste.txt");
         filenames.add("./src/testes/teste2.txt");
         filenames.add("./src/testes/Factorial.txt");
         filenames.add("./src/testes/TreeVisitor.txt");
