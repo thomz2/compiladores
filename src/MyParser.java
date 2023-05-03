@@ -31,7 +31,7 @@ public class MyParser implements MyParserConstants {
             // programas com conflito: 3, 4, 5, 6, 7, 8
             // 3 e 7 falando que não foi declarada classe
             // 4, 5, 6, 7, 8 falando sobre identificador nao valido
-            Program raiz = new MyParser(new StringReader(readFile(filenames.get(2)))).Prog();
+            Program raiz = new MyParser(new StringReader(readFile(filenames.get(8)))).Prog();
 
             DepthFirstVisitor visitorTabela = new DepthFirstVisitor();
             raiz.accept(visitorTabela);
