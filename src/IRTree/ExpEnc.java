@@ -7,7 +7,7 @@ public class ExpEnc {
         public ExpEnc(Exp e) {
             this.e = e;
         }
-        public Exp unEx() {
+        public Exp getExp() {
             return e;
         }
 }

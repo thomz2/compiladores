@@ -82,6 +82,15 @@ public class ClassTable extends Table {
         return true;
     }
 
+    public Field getInAtb(String id) {
+        for (Field atr2 : getAtributos()) {
+            if (atr2.getNome().equals(id)) {
+                return atr2;
+            }
+        }
+        return null;
+    }
+
     public boolean addMtd(String id, String t) {
         for (int i = 0; i < metodos.size(); ++i) {
             if (metodos.get(i).getPair().first.toString().equals(id)) {

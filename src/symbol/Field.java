@@ -1,10 +1,12 @@
 package symbol;
 
+import Frame.Access;
 import utils.ErrorMsg;
 import utils.Pair;
 
 public class Field extends Table {
 
+    public Access access;
     private Pair<Symbol, String> formal;
     private String nome;
     private Symbol snome;
