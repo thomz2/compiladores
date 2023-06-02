@@ -2,10 +2,7 @@
 import syntaxtree.*;
 import syntaxtree.visitor.*;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.StringReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +35,8 @@ public class MyParser implements MyParserConstants {
 
             TypeDepthFirstVisitor visitorTipo = new TypeDepthFirstVisitor(visitorTabela);
             raiz.accept(visitorTipo);
+
+            Tree.Print p = new Tree.Print(new PrintStream(readFile(filenames.get(0))));
 
         } catch (ParseException e) {
             System.out.println(e.toString());
