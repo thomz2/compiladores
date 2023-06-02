@@ -23,7 +23,7 @@ public class Conversor {
         Tree.ExpList expList = null;
 
         for (int i = list.size()-1; i >= 0; --i) {
-            expList = new Tree.ExpList((Tree.Exp) list.get(i), expList);
+            expList = new Tree.ExpList(list.get(i), expList);
         }
         return expList;
     }
@@ -64,9 +64,10 @@ public class Conversor {
         Temp.TempList tempList = null;
 
         for (int i = array.length-1; i >= 0; --i) {
-            tempList = new Temp.TempList((Temp.Temp)array[i],tempList);
+            tempList = new Temp.TempList(array[i], tempList);
         }
 
         return tempList;
     }
+
 }

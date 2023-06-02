@@ -135,4 +135,25 @@ public class ClassTable extends Table {
         }
         return false;
     }
+
+    public MethodTable getInMethods(String id) {
+        for (MethodTable mt : getMetodos()) {
+            if (mt.getNome().equals(id)) {
+                return mt;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return "ClassTable{" +
+                "nome='" + nome + '\'' +
+                ", snome=" + snome +
+                ", atributos=" + atributos +
+                ", metodos=" + metodos +
+                ", error=" + error +
+                ", mainArgs=" + mainArgs +
+                '}';
+    }
 }

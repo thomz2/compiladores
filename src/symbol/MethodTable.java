@@ -86,4 +86,12 @@ public class MethodTable extends Field {
         }
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "MethodTable{" +
+                "parametros=" + parametros +
+                ", vlocais=" + vlocais +
+                '}';
+    }
 }

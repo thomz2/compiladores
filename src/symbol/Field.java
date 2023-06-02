@@ -34,4 +34,16 @@ public class Field extends Table {
     public String getTipo() {
         return tipo;
     }
+
+    @Override
+    public String toString() {
+        return "Field{" +
+                "access=" + access +
+                ", formal=" + formal +
+                ", nome='" + nome + '\'' +
+                ", snome=" + snome +
+                ", tipo='" + tipo + '\'' +
+                ", error=" + error +
+                '}';
+    }
 }
