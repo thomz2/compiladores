@@ -8,6 +8,7 @@ import Tree.ExpList;
 public class Conversor {
 
     public static List<Tree.Exp> ExpListToList(Tree.ExpList expList){
+
         ArrayList<Tree.Exp> list = new ArrayList<Tree.Exp>();
 
         ExpList temp = expList;
@@ -18,7 +19,7 @@ public class Conversor {
 
         return list;
     }
-    public static Tree.ExpList ListToExpList(List<Tree.Exp> list){
+    public static Tree.ExpList ListToExpList(List<Tree.Exp> list) {
         Tree.ExpList expList = null;
 
         for (int i = list.size()-1; i >= 0; --i) {
@@ -27,10 +28,7 @@ public class Conversor {
         return expList;
     }
 
-
-
-
-    public static List<Temp.Temp> TempListToList(Temp.TempList tempList){
+    public static List<Temp.Temp> TempListToList(Temp.TempList tempList) {
         ArrayList<Temp.Temp> list = new ArrayList<Temp.Temp>();
 
         TempList temp = tempList;
@@ -41,7 +39,7 @@ public class Conversor {
 
         return list;
     }
-    public static Temp.TempList ListToTempList(List<Temp.Temp> list){
+    public static Temp.TempList ListToTempList(List<Temp.Temp> list) {
         Temp.TempList tempList = null;
 
         for (int i = list.size()-1; i >= 0; --i) {
@@ -50,14 +48,10 @@ public class Conversor {
         return tempList;
     }
 
-
-
-
-
-    public static Temp.Temp[] TempListToArray(TempList tempList)
-    {
+    public static Temp.Temp[] TempListToArray(TempList tempList) {
         Temp.Temp array[] = new Temp.Temp[Conversor.TempListToList(tempList).size()];
         TempList temp = tempList;
+
         for (int i = 0; i < array.length; i++) {
             array[i] = temp.head;
             temp = temp.tail;
@@ -66,12 +60,13 @@ public class Conversor {
         return array;
     }
 
-    public static Temp.TempList ArrayToTempList(Temp.Temp array[])
-    {
+    public static Temp.TempList ArrayToTempList(Temp.Temp array[]) {
         Temp.TempList tempList = null;
-        for (int i = array.length-1; i >= 0; i--) {
+
+        for (int i = array.length-1; i >= 0; --i) {
             tempList = new Temp.TempList((Temp.Temp)array[i],tempList);
         }
+
         return tempList;
     }
 }
