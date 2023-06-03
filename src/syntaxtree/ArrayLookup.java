@@ -1,4 +1,5 @@
 package syntaxtree;
+import IRTree.IRVisitor;
 import syntaxtree.visitor.*;
 public class ArrayLookup extends Exp {
     public Exp e1,e2;
@@ -13,5 +14,9 @@ public class ArrayLookup extends Exp {
 
     public Type accept(TypeVisitor v) {
         return v.visit(this);
+    }
+
+    public IRTree.ExpEnc accept(IRVisitor irVisitor) {
+        return irVisitor.visit(this);
     }
 }

@@ -1,4 +1,5 @@
 package syntaxtree;
+import IRTree.IRVisitor;
 import syntaxtree.visitor.*;
 
 public class Block extends Statement {
@@ -14,5 +15,9 @@ public class Block extends Statement {
 
     public Type accept(TypeVisitor v) {
         return v.visit(this);
+    }
+
+    public IRTree.ExpEnc accept(IRVisitor irVisitor) {
+        return irVisitor.visit(this);
     }
 }
