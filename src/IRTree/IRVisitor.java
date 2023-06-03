@@ -5,10 +5,8 @@ import Tree.Exp;
 import symbol.*;
 import Tree.*;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
+
 import syntaxtree.*;
 import syntaxtree.visitor.DepthFirstVisitor;
 import syntaxtree.visitor.TypeDepthFirstVisitor;
@@ -24,8 +22,8 @@ public class IRVisitor implements IRTree.Visitor {
     MethodTable metodoAtual;
     ClassTable classeAtual;
     public ArrayList <Frag> fragmentos;
-    Symbol classeS;
-    Symbol metodoS;
+    ClassTable classeCallStack;
+    MethodTable metodoCallStack;
 
 
     public IRVisitor(TypeDepthFirstVisitor v, Frame frameAtual) {
@@ -379,44 +377,37 @@ public class IRVisitor implements IRTree.Visitor {
         }
 
         if (n.e instanceof IdentifierExp) {
-
-            Field aux;
+            Field var;
 
             // procurando v's por metodos
-            aux = metodoAtual.getInParams(n.e.toString());
-            if (aux == null) aux = metodoAtual.getInLocals(n.e.toString());
+            var = metodoAtual.getInParams(n.e.toString());
+            if (var == null) var = metodoAtual.getInLocals(n.e.toString());
 
-            if (aux == null) j = classeAtual;
-
-            else j = classList.get(Symbol.symbol(aux.getNome()));
-
-        }
-
-        if(n.e instanceof Call)//ver ultim call aninhado
-        {
-            j = (ClassInfo)classes.get( ((MethodInfo)(((ClassInfo)classes.get(this.classeDaGambiarra)).getMetodo(this.metodoDaGambiarra))).retorno    );
+            if (var == null) {
+                j = classeAtual;
+            }
+            else {
+                j = classList.get(Symbol.symbol(var.getNome()));
+            }
 
         }
 
+        if(n.e instanceof Call) {
+            var tipoRetorno = metodoCallStack.getTipo();
 
-        if( j == null)
-        {
-
-            System.out.println("TESTE");
-            if(classe != null)
-                System.out.println(classe.id);
-            if(metodo != null)
-                System.out.println(metodo.id);
-            System.out.println(n.e);
-            System.out.println(n.i);
-            System.out.println(n.e.getClass());
+            Iterator<Symbol> iterator = classList.keySet().iterator();
+            while (iterator.hasNext()) {
+                ClassTable iteratorClass = classList.get(iterator.next());
+                if (iteratorClass.getNome().equals(tipoRetorno)) {
+                    j = iteratorClass;
+                    break;
+                }
+            }
         }
 
-
-        // TODO Auto-generated method stub
-        this.classeDaGambiarra = j.id;
-        this.metodoDaGambiarra = Symbol.symbol(n.i.toString());
-        return new Exp(new CALL(new NAME(new Label(j.id.toString()+"$"+n.i.toString())),lista));
+        classeCallStack = j;
+        metodoCallStack = j.getInMethods(n.i.toString());
+        return new ExpEnc(new CALL(new NAME(new Label(j.getNome()+"$"+n.i.toString())),lista));
     }
 
     @Override
@@ -462,7 +453,12 @@ public class IRVisitor implements IRTree.Visitor {
 
     @Override
     public ExpEnc visit(NewObject n) {
-        return null;
+        ClassTable j = classList.get(Symbol.symbol(n.i.toString()));
+        int tam = j.getAtributos().size();
+
+        Tree.ExpList parametros = new Tree.ExpList(new BINOP(BINOP.MUL,new CONST(1+tam) , new CONST(frameAtual.wordSize())), null);
+        List<Tree.Exp> lista = utils.Conversor.ExpListToList(parametros);
+        return new ExpEnc(frameAtual.externalCall("malloc", lista));
     }
 
     @Override
@@ -474,6 +470,6 @@ public class IRVisitor implements IRTree.Visitor {
 
     @Override
     public ExpEnc visit(Identifier n) {
-        return null;
+        return pegarEndereco(Symbol.symbol(n.s));
     }
 }
