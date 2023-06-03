@@ -36,7 +36,7 @@ public class IRVisitor implements IRTree.Visitor {
         fragmentos = new ArrayList<Frag>();
     }
 
-    public IRVisitor(DepthFirstVisitor v) {
+    public IRVisitor(DepthFirstVisitor v, Frame frameAtual) {
         mainclass = v.mainClass;
         classList = v.classList;
 
@@ -373,6 +373,7 @@ public class IRVisitor implements IRTree.Visitor {
         }
 
         if (n.e instanceof NewObject) {
+            //System.out.println("new object to string: " + n.e.toString());
             j = classList.get(Symbol.symbol(n.e.toString()));
         }
 
@@ -403,6 +404,18 @@ public class IRVisitor implements IRTree.Visitor {
                     break;
                 }
             }
+        }
+
+        if(j == null)
+        {
+            System.out.println("TESTE");
+            if(classeAtual != null)
+                System.out.println(classeAtual.getNome());
+            if(metodoAtual != null)
+                System.out.println(metodoAtual.getNome());
+            System.out.println(n.e);
+            System.out.println(n.i);
+            System.out.println(n.e.getClass());
         }
 
         classeCallStack = j;

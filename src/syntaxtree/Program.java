@@ -1,4 +1,6 @@
 package syntaxtree;
+import IRTree.ExpEnc;
+import IRTree.IRVisitor;
 import syntaxtree.visitor.*;
 
 public class Program {
@@ -15,5 +17,9 @@ public class Program {
 
     public Type accept(TypeVisitor v) {
         return v.visit(this);
+    }
+
+    public ExpEnc accept(IRVisitor irVisitor) {
+        return irVisitor.visit(this);
     }
 }

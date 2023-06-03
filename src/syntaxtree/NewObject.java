@@ -20,4 +20,8 @@ public class NewObject extends Exp {
     public IRTree.ExpEnc accept(IRVisitor irVisitor) {
         return irVisitor.visit(this);
     }
+
+    public String toString() {
+        return i.toString();
+    }
 }
