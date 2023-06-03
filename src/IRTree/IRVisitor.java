@@ -469,7 +469,7 @@ public class IRVisitor implements IRTree.Visitor {
     public ExpEnc visit(Not n) {
         ExpEnc e = n.e.accept(this);
 
-        return new ExpEnc(new BINOP(BINOP.MINUS,new CONST(1),e.getExp()));
+        return new ExpEnc(new BINOP(BINOP.MINUS,new CONST(1), e.getExp()));
     }
 
     @Override

@@ -1,4 +1,5 @@
 package syntaxtree;
+import IRTree.IRVisitor;
 import syntaxtree.visitor.*;
 
 public class ClassDeclSimple extends ClassDecl {
@@ -16,5 +17,9 @@ public class ClassDeclSimple extends ClassDecl {
 
     public Type accept(TypeVisitor v) {
         return v.visit(this);
+    }
+
+    public IRTree.ExpEnc accept(IRVisitor irVisitor) {
+        return irVisitor.visit(this);
     }
 }
