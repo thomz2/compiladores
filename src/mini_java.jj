@@ -42,8 +42,6 @@ public class MyParser {
             IRVisitor visitorIntermediario = new IRVisitor(visitorTipo, frameTeste);
             raiz.accept(visitorIntermediario);
 
-            //Tree.Print p = new Tree.Print(new PrintStream(readFile(filenames.get(0))));
-
         } catch (ParseException e) {
             System.out.println(e.toString());
         }

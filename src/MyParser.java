@@ -28,7 +28,7 @@ public class MyParser implements MyParserConstants {
 
         try {
             // soh da problema quando tento o arquivo de indice 2 (TreeVisitor.txt)
-            Program raiz = new MyParser(new StringReader(readFile(filenames.get(8)))).Prog();
+            Program raiz = new MyParser(new StringReader(readFile(filenames.get(0)))).Prog();
 
             DepthFirstVisitor visitorTabela = new DepthFirstVisitor();
             raiz.accept(visitorTabela);
@@ -39,8 +39,6 @@ public class MyParser implements MyParserConstants {
             Mips.MipsFrame frameTeste = new Mips.MipsFrame();
             IRVisitor visitorIntermediario = new IRVisitor(visitorTipo, frameTeste);
             raiz.accept(visitorIntermediario);
-
-            //Tree.Print p = new Tree.Print(new PrintStream(readFile(filenames.get(0))));
 
         } catch (ParseException e) {
             System.out.println(e.toString());
@@ -641,6 +639,11 @@ public class MyParser implements MyParserConstants {
     finally { jj_save(5, xla); }
   }
 
+  static private boolean jj_3R_11() {
+    if (jj_scan_token(ID)) return true;
+    return false;
+  }
+
   static private boolean jj_3R_20() {
     if (jj_scan_token(45)) return true;
     if (jj_3R_11()) return true;
@@ -659,15 +662,15 @@ public class MyParser implements MyParserConstants {
     return false;
   }
 
-  static private boolean jj_3R_10() {
-    if (jj_3R_13()) return true;
-    if (jj_3R_11()) return true;
-    return false;
-  }
-
   static private boolean jj_3R_19() {
     if (jj_scan_token(39)) return true;
     if (jj_3R_24()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_10() {
+    if (jj_3R_13()) return true;
+    if (jj_3R_11()) return true;
     return false;
   }
 
@@ -856,11 +859,6 @@ public class MyParser implements MyParserConstants {
 
   static private boolean jj_3R_24() {
     if (jj_3R_25()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_11() {
-    if (jj_scan_token(ID)) return true;
     return false;
   }
 

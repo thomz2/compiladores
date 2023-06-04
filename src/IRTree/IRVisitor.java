@@ -1,7 +1,6 @@
 package IRTree;
 
 import Frame.Frame;
-import Tree.Exp;
 import symbol.*;
 import Tree.*;
 
@@ -11,7 +10,7 @@ import syntaxtree.*;
 import syntaxtree.visitor.DepthFirstVisitor;
 import syntaxtree.visitor.TypeDepthFirstVisitor;
 import Temp.*;
-import utils.Conversor;
+import utils.Converter;
 
 public class IRVisitor implements IRTree.Visitor {
 
@@ -267,13 +266,7 @@ public class IRVisitor implements IRTree.Visitor {
         ExpEnc cond = n.e.accept(this);
         ExpEnc stm = n.s.accept(this);
 
-        return new ExpEnc (new ESEQ(
-                new SEQ (new SEQ(new LABEL(teste),
-                        new SEQ(
-                                new CJUMP(CJUMP.GT,cond.getExp(),new CONST(0), corpo, fim),
-                                new SEQ(new LABEL(corpo), new SEQ(new EXPR(stm.getExp()),new JUMP(teste)))
-                        )
-                ), new LABEL(fim)), new CONST(0)));
+        return new ExpEnc (new ESEQ(new SEQ (new SEQ(new LABEL(teste), new SEQ( new CJUMP(CJUMP.GT,cond.getExp(),new CONST(0), corpo, fim), new SEQ(new LABEL(corpo), new SEQ(new EXPR(stm.getExp()),new JUMP(teste))))), new LABEL(fim)), new CONST(0)));
     }
 
     @Override
@@ -281,7 +274,7 @@ public class IRVisitor implements IRTree.Visitor {
         ExpEnc exp = n.e.accept(this);
         Tree.ExpList parametros= new Tree.ExpList(exp.getExp(),null);
 
-        return new ExpEnc( frameAtual.externalCall("print", Conversor.ExpListToList(parametros)));
+        return new ExpEnc( frameAtual.externalCall("print", Converter.ExpListToList(parametros)));
     }
 
     @Override
@@ -345,7 +338,6 @@ public class IRVisitor implements IRTree.Visitor {
     public ExpEnc visit(ArrayLookup n) {
         ExpEnc e1 = n.e1.accept(this);
         ExpEnc e2 = n.e2.accept(this);
-        // primeira posicao indica tamanho do vetor
 
         return new ExpEnc(new MEM(new BINOP(BINOP.PLUS, e1.getExp(), new BINOP(BINOP.MUL, new BINOP(BINOP.PLUS, new CONST(1), e2.getExp()), new CONST(frameAtual.wordSize())))));
 
@@ -457,7 +449,7 @@ public class IRVisitor implements IRTree.Visitor {
 
         Tree.ExpList parametros = new Tree.ExpList(aloc,null);
 
-        List<Tree.Exp> listaConvertida = Conversor.ExpListToList(parametros);
+        List<Tree.Exp> listaConvertida = Converter.ExpListToList(parametros);
 
         Tree.Exp retorno = frameAtual.externalCall("initArray", listaConvertida);
 
@@ -470,7 +462,7 @@ public class IRVisitor implements IRTree.Visitor {
         int tam = j.getAtributos().size();
 
         Tree.ExpList parametros = new Tree.ExpList(new BINOP(BINOP.MUL,new CONST(1+tam) , new CONST(frameAtual.wordSize())), null);
-        List<Tree.Exp> lista = utils.Conversor.ExpListToList(parametros);
+        List<Tree.Exp> lista = Converter.ExpListToList(parametros);
         return new ExpEnc(frameAtual.externalCall("malloc", lista));
     }
 
