@@ -22,3 +22,6 @@ A etapa foi completamente concluída, seguindo as etapas definidas pelo professo
 
 ### Seleção de Instruções
 A etapa foi completamente concluída, com a implementação da árvore canônica, blocos e traços além da integração desses com a classe Codegen que também foi implementada nessa fase. O programa foi testado para algumas entradas fornecidas pelo site do framework e nesses testes nenhum erro foi encontrado. As principais dificuldades foram centradas no módulo CodeGen, pois apresentamos dificuldade em tratar as instruções e boa parte da árvore canônica foi fornecida pelo framework. Os três membros (Adição do Lucas nessa etapa) trabalharam em conjunto para a realização dessa fase. 
+
+### Alocação de Registradores
+A etapa foi parcialmente concluída, implementamos apenas o grafo de fluxo das instruções (com alguns erros), deixando de lado o grafo de interferência e a coloração do grafo para alocar os registradores. O programa foi testado para as entradas padrões que estão na pasta de testes do projeto. Para as entradas, os principais erros encontrados no grafo de fluxo foram alguns gotos em branco, na hora de debugar e excessões de objetos nulos. A maior dificuldade encontrada nessa etapa foi o tempo: por ser final de semestre, muitos obstáculos atrapalharam o desenvolvimento dessa fase. Os três membros trabalharam em equipe.

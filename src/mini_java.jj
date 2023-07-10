@@ -33,7 +33,7 @@ public class MyParser {
 
         try {
             // soh da problema quando tento o arquivo de indice 2 (TreeVisitor.txt)
-            Program raiz = new MyParser(new StringReader(readFile(filenames.get(0)))).Prog();
+            Program raiz = new MyParser(new StringReader(readFile(filenames.get(6)))).Prog();
 
             DepthFirstVisitor visitorTabela = new DepthFirstVisitor();
             raiz.accept(visitorTabela);
@@ -68,10 +68,14 @@ public class MyParser {
 
                 List<Assem.Instr> instrucoes = ((Mips.MipsFrame) atual.frame).codegen(Converter.StmListToArray(t));
 
-                System.out.println("\nInstrucoes\n");
+                System.out.println("\nInstrucoes:\n");
                 for (int j = 0; j < instrucoes.size(); ++j) {
                     System.out.println(instrucoes.get(j).format(h.tmap));
                 }
+
+                System.out.println("\nFLUXO:\n");
+                Graph.AssemFlowGraph fluxo = new Graph.AssemFlowGraph(instrucoes);
+                fluxo.show(System.out);
             }
 
         } catch (ParseException e) {

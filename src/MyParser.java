@@ -66,10 +66,14 @@ public class MyParser implements MyParserConstants {
 
                 List<Assem.Instr> instrucoes = ((Mips.MipsFrame) atual.frame).codegen(Converter.StmListToArray(t));
 
-                System.out.println("\nInstrucoes\n");
+                System.out.println("\nInstrucoes:\n");
                 for (int j = 0; j < instrucoes.size(); ++j) {
                     System.out.println(instrucoes.get(j).format(h.tmap));
                 }
+
+                System.out.println("\nFLUXO:\n");
+                Graph.AssemFlowGraph fluxo = new Graph.AssemFlowGraph(Converter.ArrayToInstrList(instrucoes));
+                fluxo.show(System.out);
             }
 
         } catch (ParseException e) {
